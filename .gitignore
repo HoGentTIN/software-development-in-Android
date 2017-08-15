@@ -53,3 +53,13 @@ google-services.json
 freeline.py
 freeline/
 freeline_project_description.json
+
+
+#Files concerning the TEX version of the course
+*.aux
+*.synctex.gz
+*.bcf
+*.idx
+*.run.xml
+cursus-nativeapps.pdf
+cursus-nativeapps.toc
