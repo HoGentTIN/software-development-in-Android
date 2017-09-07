@@ -73,4 +73,21 @@ The Android software stack is a Linux kernel and a collection of C/C++ libraries
 	\caption{Android is an open source, Linux-based software stack created for a wide array of devices and form factors. The following diagram shows the major components of the Android platform. Figure from \cite{google2017}}
 \end{figure}
 
+\section{Some words on ART}
+\subsection{Android Application Development flow}
+
+\begin{itemize}
+	\item All resource files are combined together by Android Asset Packing Tool (AAPT). Resource files are  audio-, video-, image-  and other asset related files. 
+	\item Java files are converted into \texttt{.class} files by the JVM. So, the output of the jvm will be \texttt{.class} files, that are heavy weight to put into android. 	\item THe \texttt{.class}  are entered as input to DX tool. Tthis is a tool which will convert \texttt{.class} files to \texttt{.dex} files, which are  executable files. 
+	\item Then comes the Application Packaging.
+	
+\end{itemize}
+
+\begin{figure}[hb]
+	\includegraphics[width=\textwidth]{images/hello/development.jpg}
+	\label{fig:develop}
+	\caption{The flow for building an Android application. Figure from \cite{Limbani2014}}
+\end{figure}
+
+\subsection{ART \& Dalvik}
 
