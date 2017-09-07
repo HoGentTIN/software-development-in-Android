@@ -124,9 +124,8 @@
 %	BIBLIOGRAPHY AND INDEX
 %----------------------------------------------------------------------------------------
 
-\usepackage[style=apa,backend=biber]{biblatex}
+\usepackage[style=ieee,backend=biber]{biblatex}
 \usepackage{csquotes}
-\DeclareLanguageMapping{dutch}{dutch-apa}
 \addbibresource{biblio.bib} % BibTeX bibliography file
 \defbibheading{bibempty}{}
 
@@ -569,7 +568,7 @@ addtohook={%
 \usepackage{listings}
 
 \lstset{ %
-  language=R,                     % the language of the code
+  language=Java,                     % the language of the code
   inputencoding=utf8,             % Allow (some) Unicode characters in the code
   extendedchars=true,
   literate={é}{{\'e}}1 {ë}{{\"e}}1 {è}{{\`e}}1 {á}{{\'a}}1 {à}{{\`a}}1 {ó}{{\'o}}1 {ò}{{\`o}}1 {²}{{$^2$}}1 {€}{{\euro}}1,

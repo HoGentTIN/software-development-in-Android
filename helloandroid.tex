@@ -1,3 +1,76 @@
 \chapterimage{images/hellochapterhead.jpg}
 
 \chapter{Hello Android}
+Android\cite{Todd2017} is a mobile operating system which is found on a variety of modern devices, the most popular being smartphones. On top of that, you will also find Android on tablets, TV streaming boxes and other portable gadgets.
+
+Android is basically a piece of software which allows your hardware to function. The Android OS gives you access to apps, including many of Google's own creation. These allow you to look for information on the web, play music and videos, check your location on a map, take photos using your device's camera and plenty more besides.
+
+\subsection{Open source Android}
+Android has open source roots. The project began under Android, Inc. in 2005, which Google bought two years later. That same year, Google and several other companies formed  \footnote{The Open Handset Alliance is a group of 84 technology and mobile companies who have come together to accelerate innovation in mobile and offer consumers a richer, less expensive, and better mobile experience. They have developed Android, the first complete, open, and free mobile platform.}{Open Handset Alliance} \cite{alliance}, with Android being the primary piece of software this consortium is built on.
+
+Android is based on the Linux kernel, and like that complex piece of code, most parts are open source with a few binary blobs included to make things work with certain hardware. The core Android platform, known as the Android Open Source Project (AOSP), is available for anyone to do with what they wish.
+
+But is it realy open source ? For the most part, Google develops Android. Once or twice a year, the company dumps  new code over a metaphorical wall that tinkerers and hardware makers use to put in their own code. This is in contrast with many other well-known open source projects : they typically seek more involvement from the broader community. Red Hat may fund a good portion of the work that goes into GNOME, but developers from all over the world contribute code. By comparison, Android comes off as entirely a Google product.
+
+
+
+\section{Android version \& updates}
+Google is constantly working on new versions of the Android software. These releases are infrequent; at the moment Google is releasing a big Android update once a year.
+
+Versions usually come with a numerical code and a name that’s so far been themed after sweets and desserts, running in alphabetical order.
+
+\begin{description}
+	\item[Android 1.5]  Cupcake
+	\item[Android 1.6]  Donut
+	\item[Android 2.1]  Eclair
+	\item[Android 2.2]  Froyo
+	\item[Android 2.3]  Gingerbread
+	\item[Android 3.2 Honeycomb]  - The first OS design specifically for tablets, launching on the Motorola Xoom
+	\item[Android 4.0 Ice Cream Sandwich] : The first OS to run on smartphones and tablets, ending the 2.X naming convention.
+	\item[Android 4.1 Jelly Bean]  Launched on the Google Nexus 7 tablet by Asus
+	\item[Android 4.2]  Jelly Bean: Arrived on the LG Nexus 4
+	\item[Android 4.3]  Jelly Bean
+	\item[Android 4.4 KitKat]  Launched on the LG Nexus 5
+	\item[Android 5.0 Lollipop]  Launched on the Motorola Nexus 6 and HTC Nexus 9
+	\item[Android 6.0 Marshmallow]  Launched on the LG Nexus 5X and Huawei Nexus 6P
+	\item[Android 7.0 Nougat] 
+	\item[Android 7.1 Nougat]  Launched on the HTC-made Google Pixel and Pixel XL
+	A\item[Android 8.0 Oreo] Rumoured to be launching on the Google Pixel 2 and Pixel XL 2
+\end{description}
+
+\subsection{API Levels}
+The core Android development team tries very hard to ensure forwards and backwards compatibility. An app you write today should work unchanged on future versions of Android (forwards compatibility), albeit perhaps missing some features or working in some sort of “compatibility mode”. And there are well-trod paths for how to create apps that will work both on the latest and on previous versions of Android (backwards compatibility).
+
+To help us keep track of all the different OS versions that matter to us as developers, Android has API levels. A new API level is defined when an Android version ships that contains changes that affect developers. When you create an emulator to test your app, you will indicate what API level that emulator should emulate. When you distribute your app, you will indicate the oldest API level your app supports, so the app is not installed on older devices.
+
+\section{The Android Software stack}
+The Android software stack is a Linux kernel and a collection of C/C++ libraries exposed through an application framework that provides services for, and management of, the run time and applications. It consists of several components \cite{google2017}:
+
+\begin{itemize}
+	\item \textbf{Linux kernel} The Android Runtime (ART) relies on the Linux kernel for underlying functionalities such as threading and low-level memory management.
+	Using a Linux kernel allows Android to take advantage of key security features and allows device manufacturers to develop hardware drivers for a well-known kernel.
+	\item \textbf{Hardware Abstraction Layer (HAL)} The hardware abstraction layer (HAL) provides standard interfaces that expose device hardware capabilities to the higher-level Java API framework. The HAL consists of multiple library modules, each of which implements an interface for a specific type of hardware component, such as the camera or bluetooth module. When a framework API makes a call to access device hardware, the Android system loads the library module for that hardware component.
+	\item \textbf{Android Runtime} Each app runs in its own process and with its own instance of the Android Runtime (ART). ART is written to run multiple virtual machines on low-memory devices by executing \textbf{DEX files}, a bytecode format designed specially for Android that's optimized for minimal memory footprint. It uses
+	\begin{itemize}
+		\item Ahead-of-time (AOT) and just-in-time (JIT) compilation \cite{}
+		\item Optimized garbage collection (GC)
+	\end{itemize}
+	Prior to Android version 5.0 (API level 21), Dalvik was the Android runtime. If your app runs well on ART, then it should work on Dalvik as well, but the reverse may not be true.
+	\item \textbf{Native C/C++ Libraries} Many core Android system components and services, such as ART and HAL, are built from native code that require native libraries written in C and C++. 
+	\item \textbf{Java API Framework} The entire feature-set of the Android OS is available to you through APIs written in the Java language. These APIs form the building blocks you need to create Android apps by simplifying the reuse of core, modular system components and services.
+	\item \textbf{System Apps} Android comes with a set of core apps for email, SMS messaging, calendars, internet browsing, contacts, and more. Apps included with the platform have no special status among the apps the user chooses to install. So a third-party app can become the user's default web browser, SMS messenger, or even the default keyboard (some exceptions apply, such as the system's Settings app).
+	
+	
+	
+	
+\end{itemize}
+
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{images/hello/android-stack.png}
+	\label{fig:stack}
+	\caption{Android is an open source, Linux-based software stack created for a wide array of devices and form factors. The following diagram shows the major components of the Android platform. Figure from \cite{google2017}}
+\end{figure}
+
+
