@@ -71,7 +71,8 @@ cursus-nativeapps.toc
 *.bbl
 *.blg
 *.nav
-.*out
+*.out
 *.snm
 *.toc
 *.vrb
+*.pdf

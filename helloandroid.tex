@@ -5,7 +5,7 @@ Android\cite{Todd2017} is a mobile operating system which is found on a variety 
 
 Android is basically a piece of software which allows your hardware to function. The Android OS gives you access to apps, including many of Google's own creation. These allow you to look for information on the web, play music and videos, check your location on a map, take photos using your device's camera and plenty more besides.
 
-\subsection{Open source Android}
+\section{Open source Android}
 Android has open source roots. The project began under Android, Inc. in 2005, which Google bought two years later. That same year, Google and several other companies formed  \footnote{The Open Handset Alliance is a group of 84 technology and mobile companies who have come together to accelerate innovation in mobile and offer consumers a richer, less expensive, and better mobile experience. They have developed Android, the first complete, open, and free mobile platform.}{Open Handset Alliance} \cite{alliance}, with Android being the primary piece of software this consortium is built on.
 
 Android is based on the Linux kernel, and like that complex piece of code, most parts are open source with a few binary blobs included to make things work with certain hardware. The core Android platform, known as the Android Open Source Project (AOSP), is available for anyone to do with what they wish.
@@ -75,13 +75,16 @@ The Android software stack is a Linux kernel and a collection of C/C++ libraries
 
 \section{Some words on ART}
 \subsection{Android Application Development flow}
+The way an Android application is built can be seen in figure \ref{fig:develop}.
 
 \begin{itemize}
 	\item All resource files are combined together by Android Asset Packing Tool (AAPT). Resource files are  audio-, video-, image-  and other asset related files. 
 	\item Java files are converted into \texttt{.class} files by the JVM. So, the output of the jvm will be \texttt{.class} files, that are heavy weight to put into android. 	\item THe \texttt{.class}  are entered as input to DX tool. Tthis is a tool which will convert \texttt{.class} files to \texttt{.dex} files, which are  executable files. 
-	\item Then comes the Application Packaging.
-	
+	\item Then comes the Application Packaging.	
+	\item In order to publish your application, Android requires that all APKs be digitally signed with a certificate before they can be installed. 
 \end{itemize}
+
+
 
 \begin{figure}[hb]
 	\includegraphics[width=\textwidth]{images/hello/development.jpg}
@@ -89,5 +92,18 @@ The Android software stack is a Linux kernel and a collection of C/C++ libraries
 	\caption{The flow for building an Android application. Figure from \cite{Limbani2014}}
 \end{figure}
 
-\subsection{ART \& Dalvik}
+\subsection{Some words on ART \& Dalvik}
+Android runtime (ART) \cite{Android2019} is the managed runtime used by applications and some system services on Android. ART and its predecessor Dalvik were originally created specifically for the Android project. ART as the runtime executes the Dalvik Executable format and Dex bytecode specification.
 
+ART and Dalvik are compatible runtimes running Dex bytecode, so apps developed for Dalvik should work when running with ART. However, some techniques that work on Dalvik do not work on ART. 
+
+The main difference between ART and Dalvik is the compilation method \cite{Vitas2013}. Android apps are deployed in Dalvik bytecode, which is portable, unlike native code. In order to be able to run the app on a device, the code has to be compiled to machine code.
+
+Dalvik is based on JIT (just in time) compilation. It means that each time you run an app, the part of the code required for its execution is going to be translated (compiled) to machine code at that moment. As you progress through the app, additional code is going to be compiled and cached, so that the system can reuse the code while the app is running. Since JIT compiles only a part of the code, it has a smaller memory footprint and uses less physical space on the device.
+
+ART, on the other hand, compiles the intermediate language, Dalvik bytecode, into a system-dependent binary. The whole code of the app will be pre-compiled during install (once), thus removing the lag that we see when we open an app on our device. With no need for JIT compilation, the code should execute much faster.
+
+Except for the potential speed increase, the use of ART can provide an important secondary benefit. As ART runs app machine code directly (native execution), it doesn't hit the CPU as hard as just-in-time code compiling on Dalvik. Less CPU usage results in less battery drain, which is a big plus for portable devices in general.
+
+
+\section{Exercises}
