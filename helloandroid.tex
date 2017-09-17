@@ -105,5 +105,40 @@ ART, on the other hand, compiles the intermediate language, Dalvik bytecode, int
 
 Except for the potential speed increase, the use of ART can provide an important secondary benefit. As ART runs app machine code directly (native execution), it doesn't hit the CPU as hard as just-in-time code compiling on Dalvik. Less CPU usage results in less battery drain, which is a big plus for portable devices in general.
 
+\newpage
+\section{Lab}
+In this lab, we will experiment with Android Studio and the Android SDK. We will create a simple project in which you’ll learn how to create an Android project and run a debuggable version of the app.
 
-\section{Exercises}
+\begin{exercise}
+	Follow the tutorial \href{https://developer.android.com/training/basics/firstapp/index.html}{found here.}
+\end{exercise}
+
+\subsection{Package naming}
+Android follows normal java package conventions: the package name is used for unique identification for your application. Android uses the package name to determine whether the application has been installed or not. The general naming is:
+
+\begin{center}
+	\textbf{com.companyname.applicationname}
+\end{center}
+
+\subsection{Minimum SDK}
+The Minimum Required SDK is the earliest version of Android that your app supports, indicated using the API level. To support as many devices as possible, you should set this to the lowest version available that allows your app to provide its core feature set. If any feature of your app is possible only on newer versions of Android and it's not critical to the app's core feature set, you can enable the feature only when running on the versions that support it.
+
+\textbf{Generally, it’s a good practice to support about 90\% of the active devices, while targeting your app to the latest version.}
+
+Keep in mind that your dependencies may have their own limitations on minSDKVersions. Hence it is best that your minsSDKVersion is a least the max from the minSDKVersion of your dependencies.
+
+\subsection{Target SDK}
+The Target SDK, roughly speaking, is the version of Android you were thinking of when you were writing the code for your app. Usually, you will set this to be the latest shipping Android API level, then change it over time as new versions of Android are released and you decide that you are ready for some of those changes.
+
+\subsection{compileSDKVersion}
+compileSdkVersion is your way to tell Gradle what version of the Android SDK to compile your app with. 
+It should be emphasized that changing your compileSdkVersion does not change runtime behavior. While new compiler warnings/errors may be present when changing your compileSdkVersion, your compileSdkVersion is not included in your APK: it is purely used at compile time. 
+
+Therefore it is strongly recommended that you always compile with the latest SDK. You’ll get all the benefits of new compilation checks on existing code, avoid newly deprecated APIs, and be ready to use new APIs.
+
+Note that if you use the Support Library, compiling with the latest SDK is a requirement for using the latest Support Library releases. For example, to use the 23.1.1 Support Library, you must have a compileSdkVersion of at least 23 (those first numbers need to match). 
+
+\subsection{Putting it together}
+Ideally, your minSDKVersion is the lowest possible, the targetSDKVersion equals the targetSDKVersion and is the latest SDK available.
+
+ 
