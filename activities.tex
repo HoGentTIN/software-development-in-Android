@@ -1,8 +1,18 @@
 \chapterimage{images/activities.jpg} % Chapter heading image
 
+
+
 \chapter{Activities and Their Lifecycles}
 
+
+
+
 An activity is a single, focused thing that the user can do. Almost all activities interact with the user, so the Activity class takes care of creating a window for you in which you can place your UI with \texttt{setContentView(View)}. Unlike programming paradigms in which apps are launched with a main() method, the Android system initiates code in an Activity instance by invoking specific callback methods that correspond to specific stages of its lifecycle.
+
+\begin{framed}
+	This chapter has an example application which you can find \href{https://github.com/eothein/ActivityExample}{here}.
+\end{framed}
+
 
 \section{Activities}
 The Activity class serves as the entry point for an app’s interaction with the user, providing the window in which the app draws its UI. This window typically fills the screen, but may be smaller than the screen and float on top of other windows. You implement an activity as a subclass of the Activity class. Generally, one activity implements one screen in an app. For instance, one of an app’s activities may implement the Preferences screen, while another activity implements the Compose Email screen.
