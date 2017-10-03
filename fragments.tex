@@ -1,0 +1,51 @@
+\chapterimage{images/fragments/fragments.jpg} % Chapter heading image
+
+\chapter{Fragments}
+Fragments are an optional layer you can put between your activities and your
+widgets, designed to help you reconfigure your activities to support screens both
+large (e.g., tablets) and small (e.g., phones). 
+
+If you regard Android as an MVC architecture, fragments and
+activities combine to be the controller layer. Fragments serve as a local controller, focused on their set of widgets, populating them from model data, and handling
+their events. Activities will serve as more of an orchestration layer, handling cross-
+fragment communications (e.g., a click in Fragment A needs to cause a change in what is displayed in Fragment B).
+
+\section{Design Philopsophy of fragments}
+Android introduced fragments in Android 3.0 (API level 11), primarily to support more dynamic and flexible UI designs on large screens, such as tablets. Because a tablet's screen is much larger than that of a handset, there's more room to combine and interchange UI components. Fragments allow such designs without the need for you to manage complex changes to the view hierarchy. By dividing the layout of an activity into fragments, you become able to modify the activity's appearance at runtime and preserve those changes in a back stack that's managed by the activity.
+
+You should design each fragment as a modular and reusable activity component. That is, because each fragment defines its own layout and its own behaviour with its own life cycle callbacks, you can include one fragment in multiple activities, so you should design for reuse and \textbf{avoid directly manipulating one fragment from another fragment}. This is especially important because a modular fragment allows you to change your fragment combinations for different screen sizes.
+
+\section{How to work with activities and fragments}
+To explain the use of fragments we will be looking at an example implementation from  \cite{murphymarkl.2017}. You can find the link \href{https://github.com/commonsguy/cw-omnibus/tree/master/Fragments/Static}{here}.
+
+\begin{framed}
+	When implementing the exercises for this course you have to use github. Off course you know you do not put every file of your project on the repository. Look how the author of \cite{murphymarkl.2017} have done this on their repository. 
+\end{framed}
+\begin{enumerate}
+	\item To create a fragment, you must create a subclass of Fragment (or an existing subclass of it). The Fragment class has code that looks a lot like an Activity. It contains callback methods similar to an activity, such as onCreate(), onStart(), onPause(), and onStop().
+	\item To provide a layout for a fragment, you must implement the onCreateView() callback method, which the Android system calls when it's time for the fragment to draw its layout. Your implementation of this method must return a View that is the root of your fragment's layout.
+	\item To add the fragment:
+	\begin{enumerate}
+		\item  Declare the fragment inside the activity's layout file.
+		In this case, you can specify layout properties for the fragment as if it were a view. 
+		\item Or, programmatically add the fragment to an existing ViewGroup. To make fragment transactions in your activity (such as add, remove, or replace a fragment), you must use APIs from FragmentTransaction. A simple example can be found \href{https://github.com/commonsguy/cw-omnibus/tree/master/Fragments/Dynamic}{here}.
+	\end{enumerate}
+\end{enumerate}
+
+\section{Fragment Life cycle}
+Fragments have lifecycle methods, just like activities do. In fact, they support most
+of the same lifecycle methods as activities:
+\begin{itemize}
+	\item onCreate()
+	\item onStart() 
+	\item onResume()
+	\item onPause()
+	\item onStop()
+	\item onDestroy()
+\end{itemize}
+Almost the same rules apply for fragments as do for activities. It is up to the reader to look when each life cycle method is called and when to use it. 
+
+\section{Communication with other Fragments and Activities}
+
+
+
