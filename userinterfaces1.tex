@@ -1,4 +1,50 @@
 \chapter{User Interfaces}
+Android gives some key components that can be used to create user interface. All the Android user interface are built using these key components:
 
+\begin{description}
+	\item[View] It is the base class for all visual components (control and widgets). All the controls present in an android app are derived
+	from this class. A View is an object that draws something on a smartphone screen and enables an user to interact with it.
+	\item[Viewgroup] A ViewGroup can contain one or more Views and defines how these Views are placed in the user interface
+	(these are used along with Android Layout managers.
+	\item[Fragments] s Introduced from API level 11, this component encapsulates a single piece of UI interface. They are very useful
+	when we have to create and optimize our app user interface for multiple devices or multiple screen size.
+	\item[Activities] Usually an Android app consists of several activities that exchange data and information. An Activity takes
+	care of creating the user interface.
+\end{description}
+
+If we analyze in more detail an Android user interface, we can notice that it has an hierarchical structure where at the root there’s
+a ViewGroup. A ViewGroup behaves like an invisible container where single views are placed following some rules. We
+can combine a ViewGroup with another ViewGroup to have more control on how views are located. We have to remember that complex user interfaces require more time to render it. \textbf{Therefore, for better performance we should create
+simple UIs.} Additionally, a clean interface helps user to have a better experience when using our app.
+
+Before we continue we need to define some key concepts:
+
+\begin{description}
+	\item[Screen size] It is the physical screen or in other words, the real dimension of our device screen.
+	\item[Density] It is the number of pixels in a given area. Usually we consider dot per inch (dpi). This is a measure of the screen
+	quality.
+	\item[Orientation] This is how the screen is oriented. It can be landscape or portrait.
+	\item[Density independent pixel] This is a new pixel unit measure introduced by Android. It is called dp. One dp is equivalent at
+	one pixel at a 160dpi screen. We should use dp unit in our measures when creating an UI, at the runtime the system takes care of
+	converting it into a real pixel.
+\end{description}
+
+From the screen size point of view, Android groups the devices in four areas,small, normal, large and extra large (xlarge),
+depending on the actual screen dimension expressed in inches. From the dpi point of view, on the other hand, we can group
+devices in: ldpi (low dpi), mdpi (medium dpi), hdpi (high dpi), xhdpi (extra high dpi) and lately xxhdpi. This is important when
+we use drawables (i.e bitmaps), because we have to create several images according to the different screen resolution.
+
+There are some best practices regarding the user interface:
+
+\begin{framed}
+	
+	
+	\begin{enumerate}
+		\item Don’t use fixed dimensions expressed in pixel, instead we should use dp.
+		\item Provide several layout structures for different screen size, we can do it creating several layout files.
+		\item Provide several bitmap with different resolution for different screen resolutions. 
+	\end{enumerate}
+
+\end{framed}
 
 \section{Material Design Basics}
