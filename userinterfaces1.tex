@@ -115,7 +115,7 @@ interesting features but they are enjoyable by users and easy to use.
 
 \subsection{The landing activity}
 The top level view is the ''landing`` area of our app, so we have to reserve to it a special attention, because this is the first
-thing an user sees of our app. There are some specific patterns (see e.g. \cite{Google2017}) that can be applied when designing this view depending on the type of information we want to show. Some of them are:
+thing an user sees of our app. There are some specific patterns (see e.g. \cite{Google2017c}) that can be applied when designing this view depending on the type of information we want to show. Some of them are:
 
 \begin{itemize}
 	\item \textbf{Fixed tabs} : when we want to give to
@@ -147,7 +147,30 @@ some low level patterns that simplify the user interaction with our app.
 
 
 \section{Screen and UI performance}
+\subsection{Building Views}
+For each view in you app, Android goes through three steps to render on the screen:
+\begin{itemize}
+	\item Measure 
+	\item Layout
+	\item Draw
+\end{itemize}
 
+The measuring starts at the top node and walks the render tree of the layout: measuring the dimensions of each view to be displayed on the screen. Each view will provide dimensions to the parent for positioning. If a parent view discovers an issue in the measurements of the dimensions (or that of its children), it can force every child to remeasure in order to resolve the issue (potentially tripling the measurement time). This is the reason a flat (less nested) view tree is valuable. The deeper the nodes for the tree, the more nested the measurement and the calculation times are lengthened.
+
+See e.g. Instagram! \cite{Kieft2014}
+
+
+To make sure you don't use to much nested views, you can make use of the Hierarchy Viewer (Component Tree in Android studio): it is a great tool to investigate the construction of your view XML. 
+
+\subsection{Asset reduction}
+With a flat design and the number of views reduced, you can reduce the number of objects used in each view. Reusing the objects can be a good strategy here.
+
+\subsection{Overdrawing the screen}
+When Android draws the screen, it draws the parent first and then the childer view on top of the parent views. This can result in entire views being drawn on the screen and then these views are entirely cover up by the subsequent views. This is a waist of processor time and should be avoided. 
+
+You can test overdraw using the Debug GPU Overdraw tool in the developer options menu (see \cite{Google2017b}).
+
+ 
 
 
 
