@@ -600,7 +600,9 @@ addtohook={%
   keywordstyle=\color{HoGentBlue},      % keyword style
 commentstyle=\color{HoGentGrey},   % comment style
 stringstyle=\color{HoGentRed},
-stepnumber=2,                   % the step between two line-numbers. If it's 1, each line
+stepnumber=2,                   % the step between two
+basicstyle=\tiny,
+%line-numbers. If it's 1, each line
 % will be numbered
 numbersep=5pt,                  % how far the line-numbers are from the code
 backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
@@ -618,7 +620,7 @@ breakatwhitespace=false,        % sets if automatic breaks should only happen at
 
 \lstnewenvironment{xml}
 {\lstset{language=XML,frame=lines,morekeywords={encoding,
-			xs:schema,xs:element,xs:complexType,xs:sequence,xs:attribute}}}
+			xs:schema,xs:element,xs:complexType,xs:sequence,xs:attribute},stringstyle=\color{HoGentBlue},basicstyle=\tiny,}}
 {}
 
 \usepackage{framed}
