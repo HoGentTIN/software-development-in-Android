@@ -6,17 +6,17 @@ This is the syllabus used for the course Native Apps 1 (Android) @ Hogeschool Ge
 
 These instructions will get you a copy of the syllabus on your local machine.
 
-This template uses biber for its bibliography and makeindex for its index.
+This template uses biber for its bibliography xelatex (although pdflatex will probably work as well).
 When you first open the template, compile it from the command line with the
 commands below to make sure your LaTeX distribution is configured correctly:
 
-* pdflatex cursus-nativeapps
-* makeindex main.idx -s StyleInd.ist
-* biber main
-* pdflatex main x 2
+* xelatex -synctex=1 -interaction=nonstopmode "cursus-nativeapps".tex
+* biber "cursus-nativeapps"
+* xelatex -synctex=1 -interaction=nonstopmode "cursus-nativeapps".tex
+* xelatex -synctex=1 -interaction=nonstopmode "cursus-nativeapps".tex
 
 After this, when you wish to update the bibliography/index use the appropriate
-command above and make sure to compile with pdflatex several times
+command above and make sure to compile with xelatex several times
 afterwards to propagate your changes to the document.
 
 This template also uses a number of packages which may need to be
