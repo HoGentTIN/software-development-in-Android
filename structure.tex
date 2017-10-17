@@ -596,11 +596,12 @@ addtohook={%
 
 
 \lstnewenvironment{android}
-{\lstset{language=java,frame=lines,
+{\lstset{language=java,
   keywordstyle=\color{HoGentBlue},      % keyword style
 commentstyle=\color{HoGentGrey},   % comment style
-stringstyle=\color{HoGentRed},
-stepnumber=2,                   % the step between two
+stringstyle=\color{HoGentBlue},
+stepnumber=2,
+		frame=shadowbox,                   % the step between two
 basicstyle=\tiny,
 %line-numbers. If it's 1, each line
 % will be numbered
@@ -611,16 +612,31 @@ showstringspaces=false,         % underline spaces within strings
 showtabs=false,                 % show tabs within strings adding particular underscores
 frame=single,                   % adds a frame around the code
 rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. commens (green here))
-tabsize=2,                      % sets default tabsize to 2 spaces
-captionpos=b,                   % sets the caption-position to bottom
+tabsize=4,                      % sets default tabsize to 4 spaces
 breaklines=true,                % sets automatic line breaking
 breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace      % string literal style
 }}
 {}
 
 \lstnewenvironment{xml}
-{\lstset{language=XML,frame=lines,morekeywords={encoding,
-			xs:schema,xs:element,xs:complexType,xs:sequence,xs:attribute},stringstyle=\color{HoGentBlue},basicstyle=\tiny,}}
+{\lstset{language=xml,
+		tabsize=3,
+		%frame=lines,
+		frame=shadowbox,
+		rulesepcolor=\color{gray},
+		xleftmargin=20pt,
+		framexleftmargin=15pt,
+		keywordstyle=\color{HoGentBlue}\bf,
+		commentstyle=\color{HoGentGreen},
+		stringstyle=\color{HoGentBlue},
+		numbers=left,
+		numberstyle=\tiny,
+		numbersep=5pt,
+		breaklines=true,
+		stepnumber=2,
+		showstringspaces=false,
+		basicstyle=\tiny,}
+	}
 {}
 
 \usepackage{framed}

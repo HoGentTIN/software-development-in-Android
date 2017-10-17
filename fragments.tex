@@ -159,3 +159,17 @@ To allow a Fragment to communicate up to its Activity, you can define an interfa
 The host activity can deliver messages to a fragment by capturing the Fragment instance with \texttt{findFragmentById()}, then directly call the fragment's public methods.
 
 
+\section{Exercises}
+\begin{exercise}
+	Refactor the application you made in exercise \ref{ex:act1} and exercise \ref{ex:act2} in such a way that Fragments are used. You can decide yourself if you prefer dynamic of static fragment setup.
+\end{exercise}
+
+\begin{exercise}
+	Refactor the application you made in exercise \ref{ex:dotpict}. Your application should:
+	\begin{enumerate}
+		\item run on large and small devices
+		\item landscape and portrait mode
+		\item have a layout where the toolbox (tools for drawing your dotpict) is in a fragment, and the drawing itself in another fragment
+		\item apply dual pane mode, and single pane mode depending on the orientation or screen size of the device.
+	\end{enumerate}
+\end{exercise}
