@@ -182,7 +182,22 @@ terminate the process within milliseconds, if there is no other running componen
 in the process. Moreover, onReceive() is called on the main application thread and may freeze your UI.
 
 
-\section{Example}
+\section{Examples}
+
+\begin{example}
+	In this example we see an application which is able to convert speech into text. You can find the application here \cite{Buysse18}. This activity contains one button, which will create an special intent launching an Activity which is able to listen to speech, convert it to text and return its results. You will need an actual Android Device to test this. 
+	
+	The application is also  able to provide the user with a list of extra actions which he is able to perform. The choices are the following:
+	\begin{itemize}
+		\item pen a web-site with a given url (validate the URL)
+		\item Open the contacts
+		\item Open the dialer
+		\item Search google
+	\end{itemize}
+Make sure you have a look on the libraries used: Butterknife and Awesomevalidator \cite{Li2016}.
+\end{example}
+
+
 \begin{example}
 We will have a good look into the onBoot project from \cite{murphymarkl.2017}: A popular request is to have code get control when the device is powered on. This is
 doable but somewhat dangerous, in that too many on-boot requests slow down the
@@ -195,5 +210,12 @@ device startup and may make things sluggish for the user.
 	device is now plugged into AC power). You simply need to register to receive this
 	Intent when it is broadcast, then take appropriate steps. See the full code in \cite{murphymarkl.2017}.
 \end{example}
+
+\pagebreak
+
+\section{Exercise}
+\begin{exercise}
+	It is time to modify our Dotpict application even further. Make sure your application is able to open the camera application for taking pictures. When a picture has been taken, your application should be able to process the photo and convert it into a pixelated version (using the views or strategy you have already provided in the previous exercises).
+\end{exercise}
 
 
