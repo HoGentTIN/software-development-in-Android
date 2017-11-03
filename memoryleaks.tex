@@ -1,0 +1,23 @@
+\chapterimage{images/memory/leaks}
+
+\chapter{Memory Leaks}
+
+
+\section{Garbage Collection in Android}
+Random-access memory (RAM) is a valuable resource in any software development environment, but it's even more valuable on a mobile operating system where physical memory is often constrained. Although both the Android Runtime (ART) and Dalvik virtual machine perform routine garbage collection, this does not mean you can ignore when and where your app allocates and releases memory. You still need to avoid introducing memory leaks, usually caused by holding onto object references in static member variables, and release any Reference objects at the appropriate time as defined by lifecycle callbacks.
+
+\section{Memory Basics}
+\subsection{Stack Memory}
+Stack memory in Android is used to store datatypes, function calls and reference variables for objects ( the handle to objects ).
+Its contains short-lived (weak) references for objects stored in the heap memory. Whenever a function is called, a block of memory is reserved for that function and its local primitive values and reference to other objects stored inside that functions. When the function execution ends, the function block space will be free and available for other methods.
+
+\subsection{Heap Memory}
+Heap memory  in Android is used for storing Objects and java classes. When we  create an object it will take space in heap memory. Android’s memory heap is a generational one, meaning that there are different buckets of allocations that it tracks, based on the expected life and size of an object being allocated. For example, recently allocated objects belong in the Young generation. When an object stays active long enough, it can be promoted to an older generation, followed by a permanent generation.
+
+Each heap generation has its own dedicated upper limit on the amount of memory that objects there can occupy. Any time a generation starts to fill up, the system executes a garbage collection event in an attempt to free up memory. The duration of the garbage collection depends on which generation of objects it's collecting and how many active objects are in each generation.
+
+\section{Garbage collection}
+
+
+
+One advantage of a garbage-collecting-language like Java is that it removes the need for developers to explicitly manage allocated memory. This reduces the likelihood of a segmentation fault crashing the app or an unfreed memory allocation bloating the heap, thus creating safer code. Unfortunately, there are other ways that memory can be leaked logically within Java. Ultimately, this means that your Android apps are still susceptible to wasting unnecessary memory and crashing as a result of out-of-memory (OOM) errors.
