@@ -142,7 +142,14 @@ When we describe parameterized statement, we are describing an SQL statement wit
 
 \section{Working assynchronoysly with SQLLite}
 \subsection{Loaders}
-Loaders are  simple, self-contained objects that (1) load data on a separate thread, and (2) monitor the underlying data source for updates, re-querying when changes are detected. The Loader API lets you load data from a content provider or other data source for display in an Activity or Fragment.
+Loaders \cite{Lockwood2012} are  simple, self-contained objects that 
+\begin{inparaenum}[(i)]
+	\item load data on a separate thread, 
+	\item monitor the underlying data source for updates and
+	\item  re-querying when changes are detected.
+\end{inparaenum}
+
+ The Loader API lets you load data from a content provider or other data source for display in an Activity or Fragment.
 \begin{itemize}
 	\item If you fetch the data directly in the activity or fragment, your users will suffer from lack of responsiveness due to performing potentially slow queries from the UI thread.
 	\item If you fetch the data from another thread, perhaps with AsyncTask, then you're responsible for managing both the thread and the UI thread through various activity or fragment lifecycle events, such as onDestroy() and configurations changes. Using Loaders this is not necessary.
@@ -183,7 +190,7 @@ Overall, implementing the callbacks is straightforward. Each callback method ser
 	\item onLoadReset is called when the Loader’s data is about to be reset. This method gives you the opportunity to remove any references to old data that may no longer be available.
 \end{enumerate}
 
-\section{Content Providers}
+\section{ContentProviders}
 ContentProviders  provide an interface for publishing data that will be consumed using a ContentResolver. They allow you to decouple the application components that consume data from their underlying data sources, providing a generic mechanism through which applications can share their data or consume data provided by others.
 
 You will also need to override the onCreate handler to initialize the underlying data source, as well as the query, update, delete, insert, and getType methods to implement the interface used by the Content Resolver to interact with the data.
@@ -192,7 +199,7 @@ You will also need to override the onCreate handler to initialize the underlying
 	Like the database contract class described in the previous section, it’s good practice to include static ContentProvider constants — particularly column names and the Content Provider authority — that will be required for transacting with, and querying, the database.
 \end{framed}
 
-\subsection{Registering Content Providers}
+\subsection{Registering ContentProviders}
 Like Activities and Services, Content Providers must be registered in your application manifest before the Content Resolver can discover them. This is done using a provider tag that includes a name attribute describing the Provider’s class name and an authorities tag.
 
 Use the authorities tag to define the base URI of the Provider’s authority. A Content Provider’s authority is used by the Content Resolver as an address and used to find the data source you want to interact with.
