@@ -283,3 +283,14 @@ The arguments are:
 \end{enumerate}
 
 If a loader corresponding to the identifier used doesn’t already exist, it is created within the associated Loader Callback’s onCreateLoader handler as described in the previous section. In most circumstances this is all that is required. The Loader Manager will handle the lifecycle of any Loaders you initialize and the underlying queries and cursors. Similarly, it will manage changes to the query results.
+
+\newpage
+\section{Exercises}
+
+\begin{exercise}
+	In this exercise you will extend the dotpict application with persistency features, namely you should be able to create, read and update dotpict pictures from your library. Make sure you use the best practices as seen in this lesseon and you are required to use the SQLLite and Contentprovider approach. Extra functionality is encouraged of course.
+\end{exercise}
+
+\begin{exercise}
+	For this exercise you are required to extend the Who is it application. Provide basic CRUD functionality for the people in the application i.e. you should be able to create, read and update information of one of the characters of your application. The way you implement this functionality is up to you: you can use the basic SQLLite functionality, or use an easier approach (GreenDAO, Room (from Google), Realm \dots) Just make sure you apply the best practices when working with databases. 
+\end{exercise}
