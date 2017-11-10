@@ -1,10 +1,37 @@
 \chapterimage{images/networking/network}
 
 \chapter{Network}
-In order to perform network operations in your application, your manifest must include the following permissions:
+This chapter will not completely explain how to perform network transaction, but it will direct you in the right direction. 
 
-\begin{xml}
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+We will provide an overview of some useful libraries and links.
+
+\subsection{Retrofit}
+Retrofit is a REST Client for Android and Java by Square. It makes it relatively easy to retrieve and upload JSON (or other structured data) via a REST based webservice. In Retrofit you configure which converter is used for the data serialization. Typically for JSON you use GSon, but you can add custom converters to process XML or other protocols. Retrofit uses the OkHttp library for HTTP requests.
+
+\subsection{GSON}
+Gson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert a JSON string to an equivalent Java object. 
+
+\subsection{ObjectBox}
+ObjectBox is designed for mobile. It is an object-oriented embedded database and a full alternative for SQLite. ObjectBox is incidentally also well-suited for IoT.
+ObjectBox is optimized for performance and designed to save app developers from dealing with SQL.
+
+\subsection{Bottomnavigation}
+The Bottom Navigation View has been in the material design guidelines for some time. You can use the standard android bottomnavigation or find a 3rd party library.
+
+\section{Exercise}
+\begin{exercise}
+	The task for this week is that you write a short report about the application which you can find \href{Uhttps://github.com/eothein/MetartaffRL}{https://github.com/eothein/Metartaff}. On the exam you could get a question where you need to show the report.
 	
-\end{xml}
+	What should be in this report? At least the answers to the following questions:
+	\begin{enumerate}
+		\item How is persistence addressed here? It is clearly not done with Content Provider and SQLLite, but in a different way. Which way is this? What are the pros and cons of this method? Is everything done in an asynchronous way? Can you test this for yourself?
+		
+		\item This application consumes a REST Service. How is this addressed in the application? What library is used and does it work asynchronously? Are there alternatives and if so, what are the pros and cons of this?
+		\item When viewing details, Fragments uses a different way than we have seen. What kind of navigation is this, how was this addressed and what are the pros and cons of this?
+		\item How is the parsing of the network data handled in this application. Are there any alternatives? Could this be done easier (or not)?
+	\end{enumerate}
+\end{exercise}
+
+\begin{exercise}
+	As a snack, you need to optimize the application as needed (UI: For example, complete the details of the last loaded METAR, e.g. OldMetars must contain a list of all METARS you've requested for a particular aiport (= history), If loading is unsuccessful, users must be properly updated. Models: Not all parameters are parsed by GSON, \dots) You use the repository you can find on Chamilo under links.
+\end{exercise}
