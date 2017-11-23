@@ -1,0 +1,33 @@
+\chapterimage{images/firebase/firebase}
+
+\chapter{Firebase}
+
+\section{Introduction}
+With Firebase, you can store and sync data to a NoSQL cloud database. The data is stored as JSON, synced to all connected clients in realtime, and available when your app goes offline. It offers API's that enable you to authenticate users with email and password, Facebook, Twitter, GitHub, Google, anonymous auth, or to integrate with existing authentication system. Other than the Realtime Database and Authentication, it offers a myriad of other services including Cloud Messaging, Storage, Hosting, Remote Config, Test Lab, Crash Reporting, Notification, App Indexing, Dynamic Links, Invites, AdWords, AdMob.
+
+In this chapter we will touch on the basic functionalities Firebase has to offer.
+
+We will follow the tutorial provided by \cite{Developpers}.
+
+\section{Some notes on setting up}
+Before starting the Android project, head over to firebase.google.com and create an account. After logging in to your account, head over to the Firebase console and create a project that will hold your app’s data.
+
+Make sure you add the correct information when creating the firebase app. 
+
+Certain Google Play services (such as Google Sign-in and App Invites) require you to provide the SHA-1 of your signing certificate so we can create an OAuth2 client and API key for your app. To get the SHA-1:
+
+\begin{enumerate}
+	\item Open Android Studio
+	\item Open your Project
+	\item Click on Gradle (From Right Side Panel, you will see Gradle Bar)
+	\item Click on Refresh (Click on Refresh from Gradle Bar, you will see List Gradle scripts of your Project)
+	\item Click on Your Project (Your Project Name form List (root))
+	\item Click on Tasks
+	\item Click on Android
+	\item Double Click on signingReport (You will get SHA1 and MD5 in Run Bar (Sometimes it will be in Gradle Console))
+\end{enumerate}
+
+Make sure you add the dependencies correctly.
+
+
+
