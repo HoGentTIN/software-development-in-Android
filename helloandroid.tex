@@ -8,7 +8,7 @@ Android is basically a piece of software which allows your hardware to function.
 \section{Open source Android}
 Android has open source roots. The project began under Android, Inc. in 2005, which Google bought two years later. That same year, Google and several other companies formed  \footnote{The Open Handset Alliance is a group of 84 technology and mobile companies who have come together to accelerate innovation in mobile and offer consumers a richer, less expensive, and better mobile experience. They have developed Android, the first complete, open, and free mobile platform.}{Open Handset Alliance} \cite{alliance}, with Android being the primary piece of software this consortium is built on.
 
-Android is based on the Linux kernel, and like that complex piece of code, most parts are open source with a few binary blobs included to make things work with certain hardware. The core Android platform, known as the Android Open Source Project (AOSP), is available for anyone to do with what they wish.
+Android is based on the Linux kernel where most parts are open source with a few binary blobs included to make things work with certain hardware. The core Android platform, known as the Android Open Source Project (AOSP), is available for anyone to do with what they wish.
 
 But is it realy open source ? For the most part, Google develops Android. Once or twice a year, the company dumps  new code over a metaphorical wall that tinkerers and hardware makers use to put in their own code. This is in contrast with many other well-known open source projects : they typically seek more involvement from the broader community. Red Hat may fund a good portion of the work that goes into GNOME, but developers from all over the world contribute code. By comparison, Android comes off as entirely a Google product.
 
@@ -38,17 +38,47 @@ Versions usually come with a numerical code and a name that’s so far been them
 	A\item[Android 8.0 Oreo] Rumoured to be launching on the Google Pixel 2 and Pixel XL 2
 \end{description}
 
+At the moment of writing Android Pie is the ninth major version of the Android operating system. It was first announced by Google on March 7, 2018, and the first developer preview was released on the same day.
+
 \subsection{API Levels}
-The core Android development team tries very hard to ensure forwards and backwards compatibility. An app you write today should work unchanged on future versions of Android (forwards compatibility), albeit perhaps missing some features or working in some sort of “compatibility mode”. And there are well-trod paths for how to create apps that will work both on the latest and on previous versions of Android (backwards compatibility).
+The core Android development team tries very hard to ensure forwards and backward compatibility. An app you write today should work unchanged on future versions of Android (forwards compatibility), albeit perhaps missing some features or working in some sort of “compatibility mode”. And there are well-trod paths for how to create apps that will work both on the latest and on previous versions of Android (backward compatibility).
 
 To help us keep track of all the different OS versions that matter to us as developers, Android has API levels. A new API level is defined when an Android version ships that contains changes that affect developers. When you create an emulator to test your app, you will indicate what API level that emulator should emulate. When you distribute your app, you will indicate the oldest API level your app supports, so the app is not installed on older devices.
 
 \section{The Android Software stack}
-The Android software stack is a Linux kernel and a collection of C/C++ libraries exposed through an application framework that provides services for, and management of, the run time and applications. It consists of several components \cite{google2017}:
+The Android software stack is a Linux kernel and a collection of C/C++ libraries exposed through an application framework that provides services for, and management of, the run time and applications. It consists of several components \cite{Google2017}:
+
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=\textwidth]{images/hello/android-stack.png}
+	\label{fig:stack}
+	\caption{Android is an open source, Linux-based software stack created for a wide array of devices and form factors. The following diagram shows the major components of the Android platform. Figure from \cite{Google2017}}
+\end{figure}
 
 \begin{itemize}
 	\item \textbf{Linux kernel} The Android Runtime (ART) relies on the Linux kernel for underlying functionalities such as threading and low-level memory management.
-	Using a Linux kernel allows Android to take advantage of key security features and allows device manufacturers to develop hardware drivers for a well-known kernel.
+	Using a Linux kernel allows Android to take advantage of key security features!
+	
+	The Linux kernel provides Android with several key security features, including:
+	
+	\begin{itemize}
+		\item A user-based permissions model
+	\item Process isolation
+	\item Extensible mechanism for secure Inter Proces communication
+	\item The ability to remove unnecessary and potentially insecure parts of the kernel
+	\end{itemize}
+	As a multiuser operating system, a fundamental security objective of the Linux kernel is to isolate user resources from one another. The Linux security philosophy is to protect user resources from one another. Thus, Linux:
+	
+\begin{itemize}
+	\item 	Prevents user A from reading user B's files
+	\item Ensures that user A does not exhaust user B's memory
+	\item Ensures that user A does not exhaust user B's CPU resources
+	\item Ensures that user A does not exhaust user B's devices (e.g. telephony, GPS, Bluetooth)
+\end{itemize}
+	
+	
+	
+	Moreover, the Linux Kernel  allows device manufacturers to develop hardware drivers for a well-known kernel.
 	\item \textbf{Hardware Abstraction Layer (HAL)} The hardware abstraction layer (HAL) provides standard interfaces that expose device hardware capabilities to the higher-level Java API framework. The HAL consists of multiple library modules, each of which implements an interface for a specific type of hardware component, such as the camera or bluetooth module. When a framework API makes a call to access device hardware, the Android system loads the library module for that hardware component.
 	\item \textbf{Android Runtime} Each app runs in its own process and with its own instance of the Android Runtime (ART). ART is written to run multiple virtual machines on low-memory devices by executing \textbf{DEX files}, a bytecode format designed specially for Android that's optimized for minimal memory footprint. It uses
 	\begin{itemize}
@@ -60,18 +90,10 @@ The Android software stack is a Linux kernel and a collection of C/C++ libraries
 	\item \textbf{Java API Framework} The entire feature-set of the Android OS is available to you through APIs written in the Java language. These APIs form the building blocks you need to create Android apps by simplifying the reuse of core, modular system components and services.
 	\item \textbf{System Apps} Android comes with a set of core apps for email, SMS messaging, calendars, internet browsing, contacts, and more. Apps included with the platform have no special status among the apps the user chooses to install. So a third-party app can become the user's default web browser, SMS messenger, or even the default keyboard (some exceptions apply, such as the system's Settings app).
 	
-	
-	
-	
 \end{itemize}
 
 
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=\textwidth]{images/hello/android-stack.png}
-	\label{fig:stack}
-	\caption{Android is an open source, Linux-based software stack created for a wide array of devices and form factors. The following diagram shows the major components of the Android platform. Figure from \cite{google2017}}
-\end{figure}
+
 
 \section{Some words on ART}
 \subsection{Android Application Development flow}
@@ -79,17 +101,16 @@ The way an Android application is built can be seen in figure \ref{fig:develop}.
 
 \begin{itemize}
 	\item All resource files are combined together by Android Asset Packing Tool (AAPT). Resource files are  audio-, video-, image-  and other asset related files. 
-	\item Java files are converted into \texttt{.class} files by the JVM. So, the output of the jvm will be \texttt{.class} files, that are heavy weight to put into android. 	\item THe \texttt{.class}  are entered as input to DX tool. Tthis is a tool which will convert \texttt{.class} files to \texttt{.dex} files, which are  executable files. 
+	\item Java and Kotlin files are converted into \texttt{.class} files by the compiler. So, the output of the compiler will be \texttt{.class} files, that are the source to put into android. 	\item The \texttt{.class}  files are entered as input to DX tool. Tthis is a tool which will convert \texttt{.class} files to \texttt{.dex} files, which are  executable files. 
 	\item Then comes the Application Packaging.	
 	\item In order to publish your application, Android requires that all APKs be digitally signed with a certificate before they can be installed. 
 \end{itemize}
 
 
-
 \begin{figure}[hb]
 	\includegraphics[width=\textwidth]{images/hello/development.jpg}
-	\label{fig:develop}
 	\caption{The flow for building an Android application. Figure from \cite{Limbani2014}}
+		\label{fig:develop}
 \end{figure}
 
 \subsection{Some words on ART \& Dalvik}
@@ -105,15 +126,8 @@ ART, on the other hand, compiles the intermediate language, Dalvik bytecode, int
 
 Except for the potential speed increase, the use of ART can provide an important secondary benefit. As ART runs app machine code directly (native execution), it doesn't hit the CPU as hard as just-in-time code compiling on Dalvik. Less CPU usage results in less battery drain, which is a big plus for portable devices in general.
 
-\newpage
-\section{Lab}
-In this lab, we will experiment with Android Studio and the Android SDK. We will create a simple project in which you’ll learn how to create an Android project and run a debuggable version of the app.
 
-\begin{exercise}
-	Follow the tutorial \href{https://developer.android.com/training/basics/firstapp/index.html}{found here.}
-\end{exercise}
-
-\subsection{Package naming}
+\section{Package naming \& Versioning}
 Android follows normal java package conventions: the package name is used for unique identification for your application. Android uses the package name to determine whether the application has been installed or not. The general naming is:
 
 \begin{center}
