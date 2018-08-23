@@ -11,9 +11,14 @@
 \input{structure}
 
 
-\author{Dr. Jens Buysse, Harm De Weirdt}
+\author{dr. Jens Buysse, Harm De Weirdt}
 \title{Native Apps 1: Android}
 \date{2017-2018}
+
+% Generate the glossary
+\makeglossaries
+
+
 
 \begin{document}
 
@@ -41,6 +46,9 @@
 
 \tableofcontents % Print the table of contents itself
 
+%Print the glossary
+\printglossaries
+
 \cleardoublepage % Forces the first chapter to start on an odd page so it's on the right
 
 \setlength{\parindent}{0pt}
@@ -50,6 +58,9 @@
 \include{dankwoord}
 
 \include{about}
+
+\include{acronyms}
+
 
 \include{helloandroid}
 \include{Kotlin}

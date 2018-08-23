@@ -1,3 +1,58 @@
 \chapterimage{images/kotlin/kotlinprogramminglanguage.png}
 
 \chapter{Hello Kotlin}
+In this chapter we will cover some of the fundamentals of the basic Kotlin language. It is not meant to be an exhaustive overview and you will find none or very little code examples. The examples used can be found in the references spread around this chapter. 
+
+\section{Kotlin vs. Java}
+
+Kotlin was created with Java developers in mind, and with IntelliJ as its main development
+IDE. There are several resources on why Kotlin has more advantages then Java. Maybe it is a good idea to have a look in the Kotlin documentation and see what they are telling. 
+
+Go to this link: \url{https://kotlinlang.org/docs/reference/comparison-to-java.html}
+
+The most important differences for this lesson are:
+
+\begin{enumerate}
+	\item Kotlin is null safe, which means that we deal with possible null
+	situations in compile time, to prevent execution time exceptions. We need to
+	explicitly specify that an object can be null, and then check its nullity before
+	using it.
+	\item As many other modern languages, it uses many
+	concepts from functional programming, such as lambda expressions, to solve
+	some problems in a much easier way. This was not possible in the Java-version of Android (at least not without the necessary extra libraries)
+	\item It makes use of extension functions: This means we can extend any class
+	with new features even if we don’t have access to the source code
+\end{enumerate}
+
+If you need a refresher regarding the advanced java concepts, we provide a small list explaining them (not in detail).
+
+\begin{description}
+	\item[Raw Type] Raw types refer to using a generic type without specifying a type parameter. For example, \texttt{List} is a raw type, while \texttt{List<String>} is a parameterized type. When generics were introduced in \gls{jdk} 1.5, raw types were retained only to maintain backwards compatibility with older versions of Java.
+	\item[Checked Exception]: are the exceptions that are checked at compile time in java. If some code within a method throws a checked exception, then the method must either handle the exception or it must specify the exception using throws keyword.
+	\item[Unchecked Exception] Unchecked are the exceptions that are not checked at compiled time.
+	\item[Lambda expression] Provide a clear and concise way to represent one method interface using an expression. For a good introduction see \url{https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html}
+\end{description}
+
+\section{Executing Kotling without Android}
+
+You can use \url{try.kotlinlang.org} to test Kotling and some other simple examples without the need of
+a real project. You could also use the \gls{repl} that comes bundled with the Kotlin plugin. You will
+find it in Tools $\rightarrow$ Kotlin $\rightarrow$ Kotlin REPL..
+
+\section{Classes}
+The full description of classes can be found in this link \url{https://kotlinlang.org/docs/reference/classes.html}. This section only contains some pointers which you should not forget when programming. 
+
+\subsection{Inheritance}
+By default, a class always extends from Any (similar to Java Object), but we can
+extend any other classes. Note however: Any is not  equals to thge java.lang.Object; in particular, it does not have any members other than equals(), hashCode() and toString() .Classes are closed by default (final), so we can only extend
+a class if it’s explicitly declared as open or abstract.
+
+\section{Functions}
+Functions in Kotlin always return a value. So if you don’t specify a return value, it will return Unit.
+Unit is similar to void in Java, though this is in fact an object. You can, of course,
+specify any type as a return value.
+
+Note that semicolons are not  necessary
+and it’s a good practice to avoid them (the IDE will warn you).
+
+

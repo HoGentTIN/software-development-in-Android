@@ -97,19 +97,21 @@ The Android software stack is a Linux kernel and a collection of C/C++ libraries
 
 \section{Some words on ART}
 \subsection{Android Application Development flow}
-The way an Android application is built can be seen in figure \ref{fig:develop}.
+The way an Android application is built can be seen in figure \ref{fig:develop}. The build process involves many tools and processes that convert your project into an \gls{apk}.
 
 \begin{itemize}
-	\item All resource files are combined together by Android Asset Packing Tool (AAPT). Resource files are  audio-, video-, image-  and other asset related files. 
-	\item Java and Kotlin files are converted into \texttt{.class} files by the compiler. So, the output of the compiler will be \texttt{.class} files, that are the source to put into android. 	\item The \texttt{.class}  files are entered as input to DX tool. Tthis is a tool which will convert \texttt{.class} files to \texttt{.dex} files, which are  executable files. 
-	\item Then comes the Application Packaging.	
-	\item In order to publish your application, Android requires that all APKs be digitally signed with a certificate before they can be installed. 
+	\item All resource files are combined together by Android Asset Packing Tool (AAPT). Resource files are audio-, video-, image-  and other asset related files. 
+	\item Java and Kotlin files are converted into \texttt{.class} files by the compiler. So, the output of the compiler will be \texttt{.class} files, that are the source to put into android. 	\item The \texttt{.class}  files are entered as input to DX tool. Tthis is a tool which will convert \texttt{.class} files to \texttt{.dex} 	 files, which include the bytecode that runs on Android devices, and everything else into compiled resources.
+	\item The APK Packager combines the DEX files and compiled resources into a single APK. Before your app can be installed and deployed onto an Android device, however, the APK must be signed.
+	\item The APK Packager signs your APK using either the debug or release keystore:
+	If you are building a debug version of your app, that is, an app you intend only for testing and profiling, the packager signs your app with the debug keystore. Android Studio automatically configures new projects with a debug keystore.
+	If you are building a release version of your app that you intend to release externally, the packager signs your app with the release keystore.
 \end{itemize}
 
 
 \begin{figure}[hb]
-	\includegraphics[width=\textwidth]{images/hello/development.jpg}
-	\caption{The flow for building an Android application. Figure from \cite{Limbani2014}}
+	\includegraphics[width=\textwidth]{images/hello/development.png}
+	\caption{The flow for building an Android application. Figure from \cite{Developers2018build}}
 		\label{fig:develop}
 \end{figure}
 
@@ -158,4 +160,22 @@ Ideally, your minSDKVersion is the lowest possible, the targetSDKVersion equals 
 \section{Gradle}
 TODO: stukje rond Gradle
 
- 
+
+\section{Exercises}
+\begin{exercise}
+	Download Android Studio, use the latest version. Make all the necessary configurations for your operating system and create a basic project. You can follow the steps explained in \url{https://kotlinlang.org/docs/tutorials/kotlin-android.html}
+\end{exercise}
+
+\begin{exercise}
+	Review the \texttt{build.gradle} files and try to understand what is written in there. What is happening in these files. What does the \texttt{ext.kotlin\_version} stand for. Is it used somewhere else? Tip: LMGTFY.
+\end{exercise}
+
+ \begin{exercise}
+ 	Our applications will be dependant from several libraries. One of them is ANKO. For some information on ANKO, you can read \cite{Bukros2017}. It is  a library that uses the power of Kotlin to simplify some
+ 	tasks in Android. We’ll need more parts of Anko later on, but for now it’s enough to
+ 	add anko-common to your project. 
+ \end{exercise}
+
+\begin{exercise}
+	In order to test whether everying is working fine, drag a \texttt{TextView} in the layout of a fresh Activity. If you have no Activity, right click your project and create one. We will be covering the Activity later on, for the moment don't worry about it. Try to alter the text at runtime by adding code in the onCreate method. Testing can be done eitther using the emulator or your own machine (if it is connected to your development machine).
+\end{exercise}
