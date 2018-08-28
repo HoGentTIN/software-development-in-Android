@@ -55,4 +55,23 @@ specify any type as a return value.
 Note that semicolons are not  necessary
 and it’s a good practice to avoid them (the IDE will warn you).
 
+You can use template expressions directly in your strings y prefixing with \$. This will make
+it easy to write complex strings based on static and variable parts. 
+
+\section{Exercies }
+In this series of exercises we are going to cover the S.O.L.I.D. design pattern and we will illustrate them with Kotlin code. 
+
+\begin{kotlin}
+class Book {
+
+	var author: String? = null
+	var text: String? = null
+	var name: String? = null
+	
+	
+	fun print() {
+		println(text)
+	}	
+}
+\end{kotlin}
 
