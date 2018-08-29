@@ -11,6 +11,7 @@ When you first open the template, compile it from the command line with the
 commands below to make sure your LaTeX distribution is configured correctly:
 
 * xelatex -synctex=1 -interaction=nonstopmode "cursus-nativeapps".tex
+* makeglossaries "cursus-nativeapps"
 * biber "cursus-nativeapps"
 * xelatex -synctex=1 -interaction=nonstopmode "cursus-nativeapps".tex
 * xelatex -synctex=1 -interaction=nonstopmode "cursus-nativeapps".tex
@@ -33,8 +34,11 @@ Successfully installing the Android SDK requires installing the Java Development
 
 ## Installing Android Studio
 
-You will also need to install Android Studio. You can find detailed instructions [on this links](https://developer.android.com/studio/install.html)
+You will also need to install Android Studio. You can find detailed instructions [on this link](https://developer.android.com/studio/install.html)
 
+## Installing IntelliJ IDEA
+
+You will also need to install IntelliJ IDEA. You can find detailed instructions [on this link](https://www.jetbrains.com/idea/download/)
 
 ## Contributing
 
@@ -49,3 +53,4 @@ We will try to  use [SemVer](http://semver.org/) for versioning.
 
 * **Jens Buysse** - *Initial work*
 * **Karine Samyn** - *Reviewing*
+* **Harm De Weirdt** - *Reviewing*
