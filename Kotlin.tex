@@ -37,7 +37,7 @@ If you need a refresher regarding the advanced java concepts, we provide a small
 
 You can use \url{try.kotlinlang.org} to test Kotling and some other simple examples without the need of
 a real project. You could also use the \gls{repl} that comes bundled with the Kotlin plugin. You will
-find it in Tools $\rightarrow$ Kotlin $\rightarrow$ Kotlin REPL..
+find it in Tools $\rightarrow$ Kotlin $\rightarrow$ Kotlin \gls{repl}..
 
 \section{Classes}
 The full description of classes can be found in this link \url{https://kotlinlang.org/docs/reference/classes.html}. This section only contains some pointers which you should not forget when programming. 
@@ -61,11 +61,11 @@ it easy to write complex strings based on static and variable parts.
 \section{Exercises }
 In this series of exercises we are going to cover the \gls{solid} design pattern and we will illustrate them with Kotlin code. Although the focus of these exercises is not de theory about these principles, we expect of course that you wil apply these principles in the nex chapters. 
 
-If for some reason the authors  have forgotten to apply them in the examples, do not hesitate to  harass and try to disconcert us with with questions, challenges or gibes regarding these exercises. 
+If for some reason the authors  have forgotten to apply them in the examples, do not hesitate to  harass and try to disconcert us with with questions and challenges regarding these exercises or examples. 
 
 
 \subsection{\gls{solid} code}
-S.O.L.I.D is an acronym for the first five object-oriented design \gls{ood} principles by Robert C. Martin.
+\gls{solid} is an acronym for the first five object-oriented design \gls{ood} principles by Robert C. Martin.
 
 These principles, when combined together, make it easy for a programmer to develop software that are easy to maintain and extend. They also make it easy for developers to easily refactor code and are also a part of the agile or adaptive software development.
 
@@ -79,7 +79,7 @@ We will list these principles in short:
 	\item[D] Dependency Inversion Principle
 \end{description}
 
-The following subsection describes the principles in more detail. The figures have been retrieved from \cite{Devilla2009}.
+The following subsection describes the principles in more detail. The figures have been retrieved from \cite{Devilla2009}, while the explanation and example come from \cite{OODesigncom2018,Janssen2018,Laanaya2016,Lipovetskii2017}
 
 \subsubsection{Single responsability principle }
 \begin{framed}
@@ -156,8 +156,77 @@ In mathematics, a Square is a Rectangle. Indeed it is a specialization of a rect
 
 Imagine you had SetWidth and SetHeight methods on your Rectangle base class; this seems perfectly logical. However if your Rectangle reference pointed to a Square, then SetWidth and SetHeight doesn't make sense because setting one would change the other to match it. In this case Square fails the Liskov Substitution Test with Rectangle and the abstraction of having Square inherit from Rectangle is a bad one.
 
-
-
 \begin{exercise}
 	Make an implementation of the Square and Rectangle which implements the \gls{srp},  \gls{ocp}  and the \gls{lsp} correctly. 
 \end{exercise}
+
+\subsubsection{Interface Segregation Principle}
+
+\begin{framed}
+	The \gls{isp} states that no client should be forced to depend on methods it does not use. ISP splits interfaces that are very large into smaller and more specific ones so that clients will only have to know about the methods that are of interest to them.
+\end{framed}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{images/kotlin/ISP.jpg}
+	\caption{The “I” in SOLID is for \gls{isp}, which states that clients should not be forced to depend on methods they don’t use. If a class exposes so many members that those members can be broken down into groups that serve different clients that don’t use members from the other groups, you should think about exposing those member groups as separate interfaces.}
+	\label{fir:lsp}
+\end{figure}
+
+What the Interface Segregation Principle says is that your interface should not be bloated with methods that implementing classes don’t require. For such interfaces, also called “fat interfaces”, implementing classes are unnecessarily forced to provide implementations (dummy/empty) even for those methods that they don’t need. In addition, the implementing classes are subject to change when the interface changes. An addition of a method or change to a method signature requires modifying all the implementation classes even if some of them don’t use the method.
+
+See the following implementation. We have a component which should work on both an Android device and on a Desktop. 
+
+\lstinputlisting[language=Kotlin, caption={Interface for the component.}, label=code:KotlinComponent]{srccode/kotlin/Component.kt}
+
+\lstinputlisting[language=Kotlin, caption={The desktop component.}, label=code:KotlinDesktop]{srccode/kotlin/DesktopComponent.kt}
+
+\lstinputlisting[language=Kotlin, caption={The Android component.}, label=code:KotlinAndroid]{srccode/kotlin/AndroidComponent.kt}
+
+\begin{exercise}
+	Redesign the Component stack to that it satisfies \gls{isp}.
+\end{exercise}
+
+
+\subsubsection{Dependency Inversion Principle}
+
+\begin{framed}
+	The \gls{dip} states that:
+	\begin{itemize}
+		\item High-level modules should not depend on low-level modules. Both should depend on abstractions.
+		\item Abstractions should not depend on details. Details should depend on abstractions.
+	\end{itemize}
+\end{framed}
+
+An important detail of this definition is, that high-level and low-level modules depend on the abstraction. The design principle does not just change the direction of the dependency, as you might have expected when you read its name for the first time. It splits the dependency between the high-level and low-level modules by introducing an abstraction between them. So in the end, you get two dependencies:
+
+Below is an example which violates the Dependency Inversion Principle. We have the manager class  (see \ref{code:KotlinManager}) which is a high level class, and the low level class called Worker (see \ref{code:KotlinWorker}).
+
+\lstinputlisting[language=Kotlin, caption={The manager class}, label=code:KotlinManager]{srccode/kotlin/Manager.kt}
+
+\lstinputlisting[language=Kotlin, caption={The Worker  class.}, label=code:KotlinWorker]{srccode/kotlin/Worker.kt}
+
+We need to add a new module to our application to model the changes in the company structure determined by the employment of new specialized workers. We created a new class SuperWorker for this.
+
+Let's assume the Manager class is quite complex, containing very complex logic. And now we have to change it in order to introduce the new SuperWorker. Let's see the disadvantages:
+
+\begin{enumerate}
+	\item we have to change the Manager class (remember it is a complex one and this will involve time and effort to make the changes).
+	\item some of the current functionality from the manager class might be affected.
+	\item the unit testing should be redone.
+\end{enumerate}
+
+All those problems could take a lot of time to be solved and they might induce new errors in the old functionlity. The situation would be different if the application had been designed following the \gls{dip}. It means we redesign the manager class, implement an IWorker interface and the Worker class implementing the IWorker interface. When we need to add the SuperWorker class all we have to do is implement the IWorker interface for it. No additional changes in the existing classes.
+
+\begin{exercise}
+	Make the changes to the implementation and describe why this is better. Does your solution address the problems mentioned above? 
+\end{exercise}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{images/kotlin/DIP.jpg}
+	\caption{The “D” in SOLID is for \gls{dip}, which states that high-level modules shouldn’t depend on low-level modules, but both should depend on shared abstractions. In addition, abstractions should not depend on details – instead, details should depend on abstractions.}
+	\label{fir:dsp}
+\end{figure}
+
+

@@ -76,3 +76,15 @@ cursus-nativeapps.toc
 *.toc
 *.vrb
 *.pdf
+
+#Glossary files
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.glsdefs
+*.ilg
+*.ind
+*.ist
