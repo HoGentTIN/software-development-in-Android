@@ -7,10 +7,13 @@
 
 
 
-An activity is a single, focused thing that the user can do. Almost all activities interact with the user, so the Activity class takes care of creating a window for you in which you can place your UI with \texttt{setContentView(View)}. Unlike programming paradigms in which apps are launched with a main() method, the Android system initiates code in an Activity instance by invoking specific callback methods that correspond to specific stages of its lifecycle.
+An activity is a single, focused thing that the user can do. Almost all activities interact with the user, so the Activity class takes care of creating a window for you in which you can place your UI with 
+%TODO: check is still applicable
+\texttt{setContentView(View)}. Unlike programming paradigms in which apps are launched with a main() method, the Android system initiates code in an Activity instance by invoking specific callback methods that correspond to specific stages of its lifecycle.
 
 \begin{framed}
-	This chapter has an example application which you can find \href{https://github.com/eothein/ActivityExample}{here}.
+	%TODO: aanpassen 
+	This chapter has an example application which you can find here \cite{GoogleDevelopers2018}. The link contains the steps which youy need to take to build the application. The final code can be found on \url{https://github.com/eothein/ActivityProject}	
 \end{framed}
 
 
@@ -23,7 +26,22 @@ Although activities work together to form a cohesive user experience in an app, 
 
 To use activities in your app, you must register information about them in the app’s manifest, and you must manage activity lifecycles appropriately. 
 
+\subsection{One Activity to rule them all}
+In the past Android recommended to use one Activity for a single, focuses task for your application. This resulted in applications with many Activities, all serving a certain purposes. This architecture had several drawbacks:
+
+\begin{enumerate}
+	\item Toolbar configuration and views are handles on different places
+	\item You had to rely on the Android Framework to change content
+	\item Previous Activities with views could still exist in the stack, which can cause an out-of-memory exception in endless navigation applications
+	\item Side menu implementation was difficult.
+\end{enumerate}
+ANdroid is introducing the Navigation component as a framework for structuring your in-app UI, with a focus on making a single-Activity app the preferred architecture. Although we are not goging to cover the Navigation Component (still in $\alpha$ phase), later in this book we will use the single activity architecture with the corresponding features. For this chapter however, we will use multiple activities for educational purposes. 
+
 \section{The Activity Life Cycle}
+As stated before, an activity is a single, focused thing that the user can do. Almost all activities interact with the user, so the Activity class takes care of creating a window for you in which you can place your UI.
+
+Activities in the system are managed as an activity stack. When a new activity is started, it is placed on the top of the stack and becomes the running activity, the previous activity always remains below it in the stack, and will not come to the foreground again until the new activity exits.
+
 The activity life cycle is demonstrated in figure \ref{fig:lifeCycle1}, which shows the different states and transitions an activity is able to make. The same model, but maybe a but more easy to read is shown in figure \ref{fig:lifeCycle2}. It is up to the reader to see that these figure basically show the same life cycle. 
 
 As Activities are created and destroyed, they move in and out of the stack \footnote{Activities in the system are managed as an activity stack. When a new activity is started, it is placed on the top of the stack and becomes the running activity -- the previous activity always remains below it in the stack, and will not come to the foreground again until the new activity exits.} (the "back stack"). As they do so, they transition through four possible states.
@@ -52,16 +70,21 @@ For more information regarding the different life cylce callback, we refer the r
 \subsection{Saving and restoring the state}
 There are a few scenarios in which your activity is destroyed due to normal app behavior, such as when the user presses the Back button or your activity signals its own destruction by calling the finish() method. The system may also destroy the process containing your activity to recover memory if the activity is in the Stopped state and hasn't been used in a long time, or if the foreground activity requires more resources.
 
-When your activity is destroyed because the user presses Back or the activity finishes itself, the system's concept of that Activity instance is gone forever because the behavior indicates the activity is no longer needed. However, if the system destroys the activity due to system constraints (rather than normal app behavior), then although the actual Activity instance is gone, the system remembers that it existed such that if the user navigates back to it, the system creates a new instance of the activity using a set of saved data that describes the state of the activity when it was destroyed. The saved data that the system uses to restore the previous state is called the instance state and is a collection of key-value pairs stored in a Bundle object.
+When your activity is destroyed because the user presses  ``Back'' or the activity finishes itself, the system's concept of that Activity instance is gone forever because the behavior indicates the activity is no longer needed. However, if the system destroys the activity due to system constraints (rather than normal app behavior), then although the actual Activity instance is gone, the system remembers that it existed such that if the user navigates back to it, the system creates a new instance of the activity using a set of saved data that describes the state of the activity when it was destroyed. The saved data that the system uses to restore the previous state is called the \textbf{instance state} and is a collection of key-value pairs stored in a Bundle object.
 
 By default, the system uses the Bundle instance state to save information about each View object in your activity layout (such as the text value entered into an EditText widget). So, if your activity instance is destroyed and recreated, the state of the layout is restored to its previous state with no code required by you. However, your activity might have more state information that you'd like to restore, such as member variables that track the user's progress in the activity.
 
 \begin{exercise}
-	Start the example application found in \cite{Buysse19}. Remove the id of the editText (\texttt{android:id="@+id/nameEditText"}). Fill in your name and turn the device. What do you see?
+	Start the example application found in \url{https://github.com/eothein/ActivityProject}. Remove the id of the editText (\texttt{android:id="@+id/nameEditText"}). Fill in your name and turn the device. What do you see? What happens when you ckose the app or press the back button. 	
 \end{exercise}
 
-\subsubsection{Saving and restoring your activity state}
-As your activity begins to stop, the system calls the onSaveInstanceState() method so your activity can save state information with a collection of key-value pairs. The default implementation of this method saves transient information about the state of the activity's view hierarchy, such as the text in an EditText widget or the scroll position of a ListView widget.
+\subsubsection{Reacting to configuration changes}
+Some device configurations can change during runtime (such as screen orientation, keyboard availability, and when the user enables multi-window mode). When such a change occurs, Android restarts the running Activity ( onDestroy() is called, followed by onCreate()). The restart behavior is designed to help your application adapt to new configurations by automatically reloading your application with alternative resources that match the new device configuration.
+
+If restarting your activity requires that you recover large sets of data, reestablish a network connection, or perform other intensive operations, then a full restart due to a configuration change might be a slow user experience. Also, it might not be possible for you to completely restore your activity state with the Bundle that the system saves for you with the onSaveInstanceState() callback—it is not designed to carry large objects (such as bitmaps) and the data within it must be serialized then deserialized on the main thread, which can consume a lot of memory and make the configuration change slow.
+
+\subsubsection{Persisting Data Between Launches}
+As your activity begins to stop, the system calls the onStop() method so your activity can save state information with a collection of key-value pairs. The default implementation of this method saves transient information about the state of the activity's view hierarchy, such as the text in an EditText widget or the scroll position of a ListView widget.
 
 When your activity is recreated after it was previously destroyed, you can recover your saved state from the Bundle that the system passes to your activity. Both the onCreate() and onRestoreInstanceState() callback methods receive the same Bundle that contains the instance state information.
 
@@ -71,6 +94,14 @@ Instead of restoring the state during onCreate() you may choose to implement onR
 
 Caution: Always call the superclass implementation of onRestoreInstanceState() so the default implementation can restore the state of the view hierarchy.
 
+Another way of tackling the problem is using Sharedpreferences, which is outlined in the following code example. 
+
+
+
+\lstinputlisting[firstline=28,lastline=66,language=Kotlin, caption={Persisting Data Between Launches with Shared Preferences}, label=code:KotlinSRPBook]{srccode/activities/MainActivity.kt}
+
+
+
 \section{Starting a new activity}
 An Intent encapsulates a request, made to Android, for some activity or other
 receiver to do something. If the activity you intend to launch is one of your own, you may find it simplest to
@@ -78,16 +109,20 @@ create an explicit Intent, naming the component you wish to launch. For example,
 from within your activity, you could create an Intent like this:
 
 \begin{lstlisting}
-new Intent(this, HelpActivity.class);
+val intent = Intent(this, NextActivity::class.java)
+// To pass any data to next activity
+intent.putExtra("keyIdentifier", value)
+// start your next activity
+startActivity(intent)
 \end{lstlisting}
 
 
-This would stipulate that you wanted to launch the HelpActivity. HelpActivity
+This would stipulate that you wanted to launch the NextActivity. NextActivity
 would need to have a corresponding <activity> element in your
 AndroidManifest.xml file.
 
 \section{The Manifest File}
-Each Android project includes a manifest file, AndroidManifest.xml, stored in the root of its project hierarchy. The manifest defines the structure and metadata of your application, its components, and its requirements. In this section we will briefly describe what you can find in the manifest, but during the lessons we will have a closer look into it.
+Each Android project includes a manifest file, AndroidManifest.xml, stored in the root of its project hierarchy. The manifest defines the structure and metadata of your application, its components, and its requirements. In this section we will briefly describe what you can find in the manifest, but in the next chapters we will have a closer look at it.
 
 \begin{itemize}
 	\item It includes nodes for each of the Activities, Services, Content Providers, and Broadcast Receivers that make up your application and, using Intent Filters and Permissions, determines how they interact with each other and with other applications.
@@ -99,7 +134,7 @@ Each Android project includes a manifest file, AndroidManifest.xml, stored in th
 \section{Externalizing Resources}
 It’s always good practice to keep non-code resources, such as images and string constants, external to your code. Android supports the externalization of resources, ranging from simple values such as strings and colors to more complex resources such as images (Drawables), animations, themes, and menus. Perhaps the most powerful externalizable resources are layouts.
 
-By externalizing resources, you make them easier to maintain, update, and manage. This also lets you easily define alternative resource values for internationalization and to include different resources to support variations in hardware - particularly, screen size and resolution.
+By externalizing resources, you make them easier to maintain, update, optimize and manage. This also lets you easily define alternative resource values for internationalization and to include different resources to support variations in hardware - particularly, screen size and resolution.
 
 \subsection{Strings}
 String resources are specified with the string tag and simple markup attributes can be added.
@@ -118,7 +153,7 @@ In this lesson we will build our first working app, using activities, intents an
 	In this excercise you have to create an Activity and we are going to count how many times each life cycle method from the Activity will be called. In order to do this you should:
 	\begin{enumerate}
 		\item Create a new activiy with all necessary triggers (all of them)
-		\item Log each lifecycle method using Log.i() method.
+		\item Log each lifecycle method using a desired loggin method. Look for some examples online which solution suits you best.
 		\item Use a counter variable for each life cycle method which is incremented with each call of the life cylce method. The user interface should be able to show this counter.
 		\item Do this for the first activity. 
 	\end{enumerate}
