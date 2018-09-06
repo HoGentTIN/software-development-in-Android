@@ -62,6 +62,43 @@ A new API level is defined when an Android version ships that contains changes t
 When you create an emulator to test your app, you will indicate what API level that emulator should emulate
 When you distribute your app, you will indicate the oldest API level your app supports, and the app won't be installable on older devices.
 
+\section{Package naming \& Versioning}
+Android follows normal Java package conventions: the package name is used for unique identification of your application.
+Android uses the package name to determine whether an application has been installed or not.
+The general naming is:
+
+\begin{center}
+	\textbf{com.companyname.applicationname}
+\end{center}
+
+\subsection{Minimum SDK}
+The Minimum Required SDK is the earliest version of Android supported by your app, indicated using the API level.
+To support as many devices as possible, you should set this to the lowest version available that allows your app to provide its core feature set.
+If any feature of your app is possible only on newer versions of Android and it's not critical to the app's core feature set, you can enable the feature only when running on the versions that support it.
+
+\textbf{Generally, it’s a good practice to support about 90\% of the active devices, while targeting your app to the latest version.}
+
+Keep in mind that your dependencies may have their own limitations on minSDKVersions.
+Hence it is best that your minsSDKVersion is a least the max from the minSDKVersion of your dependencies.
+
+\subsection{Target SDK}
+The Target SDK, roughly speaking, is the version of Android you were thinking of when you were writing the code for your app.
+Usually, you will set this to be the latest shipping Android API level, then change it over time as new versions of Android are released and you decide that you are ready for some of those changes.
+
+\subsection{compileSDKVersion}
+compileSdkVersion is your way to tell Gradle what version of the Android SDK to compile your app with.
+It should be emphasized that changing your compileSdkVersion does not change runtime behavior.
+While new compiler warnings/errors may be present when changing your compileSdkVersion, your compileSdkVersion is not included in your APK: it is purely used at compile time.
+
+Therefore it is strongly recommended that you always compile with the latest SDK.
+You’ll get all the benefits of new compilation checks on existing code, avoid newly deprecated APIs, and be ready to use new APIs.
+
+Note that if you use the Support Library, compiling with the latest SDK is a requirement for using the latest Support Library releases.
+For example, to use the 23.1.1 Support Library, you must have a compileSdkVersion of at least 23 (those first numbers need to match).
+
+\subsection{Putting it together}
+Ideally, your minSDKVersion is the lowest possible, the targetSDKVersion equals the targetSDKVersion and is the latest SDK available.
+
 \section{The Android Software stack}
 The Android software stack is a Linux kernel and a collection of C/C++ libraries exposed through an application framework that provides services for, and management of, the runtime and applications.
 It consists of several components \cite{Google2017}:
@@ -120,6 +157,10 @@ It consists of several components \cite{Google2017}:
 		So a third-party app can become the user's default web browser, SMS messenger, or even the default keyboard (some exceptions apply, such as the system's Settings app).
 \end{itemize}
 
+
+
+
+
 \section{Some words on ART}
 \subsection{Android Application Development flow}
 Figure \ref{fig:develop} illustrates the way an Android application is built.
@@ -127,25 +168,25 @@ This build process involves many tools and processes that convert your project i
 
 \begin{itemize}
 	\item All resource files are combined together by Android Asset Packing Tool (AAPT).
-		Resource files are audio-, video-, image-  and other asset related files.
+	Resource files are audio-, video-, image-  and other asset related files.
 	\item Java and Kotlin files are converted into \texttt{.class} files by the compiler.
-		These \texttt{.class} files are the source for the next step in the build process.
+	These \texttt{.class} files are the source for the next step in the build process.
 	\item The \texttt{.class}  files are entered as input to DX tool.
-		This tool converts \texttt{.class} files to \texttt{.dex} files, which include the bytecode that runs on Android devices, and everything else into compiled resources.
+	This tool converts \texttt{.class} files to \texttt{.dex} files, which include the bytecode that runs on Android devices, and everything else into compiled resources.
 	\item The APK Packager combines the DEX files and compiled resources into a single APK.
-		Before your app can be installed and deployed onto an Android device, however, the APK must be signed.
+	Before your app can be installed and deployed onto an Android device, however, the APK must be signed.
 	\item The APK Packager signs your APK using either the debug or release keystore:
-		If you are building a debug version of your app, that is, an app you intend only for testing and profiling, the packager signs your app with the debug keystore.
-		Android Studio automatically configures new projects with a debug keystore.
-		If you are building a release version of your app that you intend to release externally, the packager signs your app with the release keystore.
+	If you are building a debug version of your app, that is, an app you intend only for testing and profiling, the packager signs your app with the debug keystore.
+	Android Studio automatically configures new projects with a debug keystore.
+	If you are building a release version of your app that you intend to release externally, the packager signs your app with the release keystore.
 \end{itemize}
 
 
 \begin{figure}[hb]
 	\includegraphics[width=\textwidth]{images/hello/development.png}
 	\caption{The flow for building an Android application.
-			Note the \gls{aidl} Figure from \cite{Developers2018build}.}
-		\label{fig:develop}
+		Note the \gls{aidl} Figure from \cite{Developers2018build}.}
+	\label{fig:develop}
 \end{figure}
 
 \subsection{Some words on ART \& Dalvik}
@@ -172,44 +213,6 @@ With no need for JIT compilation, the code should execute much faster.
 Except for the potential speed increase, the use of ART can provide an important secondary benefit.
 As ART runs app machine code directly (native execution), it doesn't hit the CPU as hard as just-in-time code compiling on Dalvik.
 Less CPU usage results in less battery drain, which is a big plus for portable devices.
-
-
-\section{Package naming \& Versioning}
-Android follows normal Java package conventions: the package name is used for unique identification of your application.
-Android uses the package name to determine whether an application has been installed or not.
-The general naming is:
-
-\begin{center}
-	\textbf{com.companyname.applicationname}
-\end{center}
-
-\subsection{Minimum SDK}
-The Minimum Required SDK is the earliest version of Android supported by your app, indicated using the API level.
-To support as many devices as possible, you should set this to the lowest version available that allows your app to provide its core feature set.
-If any feature of your app is possible only on newer versions of Android and it's not critical to the app's core feature set, you can enable the feature only when running on the versions that support it.
-
-\textbf{Generally, it’s a good practice to support about 90\% of the active devices, while targeting your app to the latest version.}
-
-Keep in mind that your dependencies may have their own limitations on minSDKVersions.
-Hence it is best that your minsSDKVersion is a least the max from the minSDKVersion of your dependencies.
-
-\subsection{Target SDK}
-The Target SDK, roughly speaking, is the version of Android you were thinking of when you were writing the code for your app.
-Usually, you will set this to be the latest shipping Android API level, then change it over time as new versions of Android are released and you decide that you are ready for some of those changes.
-
-\subsection{compileSDKVersion}
-compileSdkVersion is your way to tell Gradle what version of the Android SDK to compile your app with.
-It should be emphasized that changing your compileSdkVersion does not change runtime behavior.
-While new compiler warnings/errors may be present when changing your compileSdkVersion, your compileSdkVersion is not included in your APK: it is purely used at compile time.
-
-Therefore it is strongly recommended that you always compile with the latest SDK.
-You’ll get all the benefits of new compilation checks on existing code, avoid newly deprecated APIs, and be ready to use new APIs.
-
-Note that if you use the Support Library, compiling with the latest SDK is a requirement for using the latest Support Library releases.
-For example, to use the 23.1.1 Support Library, you must have a compileSdkVersion of at least 23 (those first numbers need to match).
-
-\subsection{Putting it together}
-Ideally, your minSDKVersion is the lowest possible, the targetSDKVersion equals the targetSDKVersion and is the latest SDK available.
 
 \section{Gradle}
 TODO: stukje rond Gradle
