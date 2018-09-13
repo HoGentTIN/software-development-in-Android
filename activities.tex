@@ -59,7 +59,7 @@ When a new activity is started, it is placed on the top of the stack and becomes
 The previous activity always remains below it in the stack, and will not come to the foreground again until the new activity exits.
 
 The activity lifecycle is demonstrated in figure \ref{fig:lifeCycle1}, which shows the different states and transitions an activity is able to make.
-The same model, but maybe a but more easy to read is shown in figure \ref{fig:lifeCycle2}.
+The same model, but maybe a bit more easy to read is shown in figure \ref{fig:lifeCycle2}.
 It is up to the reader to see that these figures illustrate the same concept.
 
 As Activities are created and destroyed, they move in and out of the stack \footnote{Activities in the system are managed as an activity stack.
@@ -91,7 +91,7 @@ As they do so, they transition through four possible states.
 	\label{fig:lifeCycle2}
 \end{figure}
 
-For more information regarding the different life cylce callback, we refer the reader to \cite{Developers19}.
+For more information regarding the different life cylce callbacks, we refer the reader to \cite{Developers19}.
 
 \subsection{Saving and restoring the state}
 There are a few scenarios in which your activity is destroyed due to normal app behavior, such as when the user presses the Back button or your activity signals its own destruction by calling the finish() method.
