@@ -5,7 +5,7 @@
  * A class in Kotlin can have a primary constructor which is part of the class header.
  */
 
-class book(author: String) {
+class Book(author: String) {
 
 
     /**
