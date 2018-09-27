@@ -5,14 +5,13 @@
 An activity is a single, focused thing that the user can do.
 Almost all activities interact with the user, so the Activity class takes care of creating a window for you in which you can place your UI with \texttt{setContentView(View)}. \todo{check if still applicable}
 Unlike programming paradigms in which apps are launched with a main() method, the Android system initiates code in an Activity instance by invoking specific callback methods that correspond to specific stages of its lifecycle.
-
+	
 \begin{framed}
-	\todo{Aanpassen}
 	This chapter has an example application which you can find here \cite{GoogleDevelopers2018}.
 	The link contains the steps which youy need to take to build the application.
 	The final code can be found on \url{https://github.com/eothein/ActivityProject}	
 \end{framed}
-
+\todo{Check of links juist zijn Aanpassen}
 
 \section{Activities}
 The Activity class serves as the entry point for an app’s interaction with the user, providing the window in which the app draws its UI.
@@ -35,6 +34,7 @@ For example, a browser app might launch the Share activity of a social-media app
 To use activities in your app, you must register information about them in the app’s manifest, and you must manage activity lifecycles appropriately.
 
 \subsection{One Activity to rule them all}
+\label{sec:oneactivity}
 In the past Android recommended to use one Activity for a single, focuses task for your application.
 This resulted in applications with many Activities, all serving a certain purposes.
 This architecture had several drawbacks:
