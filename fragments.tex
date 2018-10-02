@@ -1,21 +1,32 @@
 \chapterimage{images/fragments/fragments.jpg} % Chapter heading image
 
 \chapter{Fragments}
-Fragments are an optional layer you can put between your activities and your
-widgets, designed to help you reconfigure your activities to support screens both
-large (e.g., tablets) and small (e.g., phones). 
+Fragments are an optional layer you can put between your activities and your widgets, designed to help you reconfigure your activities to support screens both large (e.g., tablets) and small (e.g., phones). 
 
-If you regard Android as an MVC architecture, fragments and
-activities combine to be the controller layer. Fragments serve as a local controller, focused on their set of widgets, populating them from model data, and handling
-their events. Activities will serve as more of an orchestration layer, handling cross-
-fragment communications (e.g., a click in Fragment A needs to cause a change in what is displayed in Fragment B).
+If you regard Android as an MVC architecture, fragments and activities combine to be the controller layer. Fragments serve as a local controller, focused on their set of widgets, populating them from model data, and handling
+their events. Activities will serve as more of an orchestration layer, handling cross- fragment communications (e.g., a click in Fragment A needs to cause a change in what is displayed in Fragment B).
 
-This chapter is built from the following resources: \cite{Point2017, TueDao2017, Guide2017, murphymarkl.2017}.
+This chapter is built from the following resources: \cite{Point2017, TueDao2017, Guide2017, murphymarkl.2017,Gleason2017}.
 
 \section{Design Philopsophy of fragments}
 Android introduced fragments in Android 3.0 (API level 11), primarily to support more dynamic and flexible UI designs on large screens, such as tablets. Because a tablet's screen is much larger than that of a handset, there's more room to combine and interchange UI components. Fragments allow such designs without the need for you to manage complex changes to the view hierarchy. By dividing the layout of an activity into fragments, you become able to modify the activity's appearance at runtime and preserve those changes in a back stack that's managed by the activity.
 
+Fragments offer
+
+\begin{itemize}
+	\item Modularity: Dividing complex activity code across fragments for better organization and maintenance.
+	\item Reusability: Placing behavior or UI parts into fragments that can be shared across multiple activities.
+	\item Adaptability: Representing sections of a UI as different fragments and utilizing different layouts depending on screen orientation and size.
+\end{itemize}
+
 You should design each fragment as a modular and reusable activity component. That is, because each fragment defines its own layout and its own behaviour with its own life cycle callbacks, you can include one fragment in multiple activities, so you should design for reuse and \textbf{avoid directly manipulating one fragment from another fragment}. This is especially important because a modular fragment allows you to change your fragment combinations for different screen sizes.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{images/fragments/framgentswhy.png}
+	\label{fig:whyfragments}
+	\caption{You should design each fragment as a modular, adaptable and reusable component.}
+\end{figure}
 
 \section{How to work with activities and fragments}
 To explain the use of fragments we will be looking at an example implementation from  \cite{murphymarkl.2017}. You can find the link \href{https://github.com/commonsguy/cw-omnibus/tree/master/Fragments/Static}{here}.

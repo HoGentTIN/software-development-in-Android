@@ -1,17 +1,15 @@
-\chapter{User Interfaces}
+\chapter{User Interfaces }
 
 \section{Introduction}
-Android gives some key components that can be used to create user interface. All the Android user interface are built using these key components:
+Android gives some key components that can be used to create user interface. All the Android user interfaces are built using these key components:
 
 \begin{description}
-	\item[View] It is the base class for all visual components (control and widgets). All the controls present in an android app are derived
-	from this class. A View is an object that draws something on a smartphone screen and enables an user to interact with it.
+	\item[View] It is the base class for all visual components (control and widgets). All the controls present in an android app are derived from this class. A View is an object that draws something on a  screen and enables an user to interact with it.
 	\item[Viewgroup] A ViewGroup can contain one or more Views and defines how these Views are placed in the user interface
-	(these are used along with Android Layout managers.
+	(these are used along with Android Layout managers).
 	\item[Fragments] This component encapsulates a single piece of UI interface. They are very useful
-	when we have to create and optimize our app user interface for multiple devices or multiple screen size.
-	\item[Activities] Usually an Android app consists of several activities that exchange data and information. An Activity takes
-	care of creating the user interface.
+	when we have to create and optimize our app user interfaces for multiple devices or multiple screen sizes.
+	\item[Activities] Usually an Android app consists of one or several activities that exchange data and information. An Activity takes care of creating the user interface. Note that in section \ref{sec:oneactivity} we described that we will use the One Activity approach. 
 \end{description}
 
 If we analyze in more detail an Android user interface, we can notice that it has an hierarchical structure where at the root there's
@@ -19,8 +17,7 @@ a ViewGroup. A ViewGroup behaves like an invisible container where single views 
 can combine a ViewGroup with another ViewGroup to have more control on how views are located. We have to remember that complex user interfaces require more time to render it. 
 
 \begin{framed}
-Therefore, for better performance we should create
-simple UIs.  Additionally, a clean interface helps user to have a better experience when using our app.	
+Therefore, for better performance we should create simple UIs.  Additionally, a clean interface helps user to have a better experience when using our app.	
 \end{framed}
 
 
@@ -30,16 +27,31 @@ Before we continue we need to define some key concepts:
 	\item[Screen size] It is the physical screen or in other words, the real dimension of our device screen.
 	\item[Density] It is the number of pixels in a given area. Usually we consider dot per inch (dpi). This is a measure of the screen
 	quality.
-	\item[Orientation] This is how the screen is oriented. It can be landscape or portrait.
-	\item[Density independent pixel] This is a new pixel unit measure introduced by Android. It is called dp. One dp is equivalent at
-	one pixel at a 160dpi screen. We should use dp unit in our measures when creating an UI, at the runtime the system takes care of
-	converting it into a real pixel.
+	\item[Orientation] This is how the screen is oriented. It can be \textbf{landscape} or \textbf{portrait} mode.
+	\item[Density independent pixel] This is a  pixel unit measure introduced by Android. It is called \textbf{dp}. One dp is equivalent at one pixel at a 160dpi screen. We should use dp unit in our measures when creating an UI, at the runtime the system takes care of converting it into a real pixel. For example, consider  devices with different pixel densities. If you were to define a view to be "100px" wide, it will appear much larger on the device with a low pixel density. So you must instead use "100dp" to ensure it appears the same size on both screens.
+	When defining text sizes, however, you should instead use scalable pixels (sp) as your units (but never use sp for layout sizes). The sp unit is the same size as dp, by default, but it resizes based on the user's preferred text size.
 \end{description}
 
-From the screen size point of view, Android groups the devices in four areas,small, normal, large and extra large (xlarge),
+From the screen size point of view, Android groups the devices in four areas
+\begin{enumerate}
+	\item small
+	\item normal
+	\item large and
+	 \item extra large (xlarge),
+\end{enumerate}
+
+
 depending on the actual screen dimension expressed in inches. From the dpi point of view, on the other hand, we can group
-devices in: ldpi (low dpi), mdpi (medium dpi), hdpi (high dpi), xhdpi (extra high dpi) and lately xxhdpi. This is important when
-we use drawables (i.e bitmaps), because we have to create several images according to the different screen resolution.
+devices in: 
+\begin{enumerate}
+	\item dpi (low dpi)
+	\item mdpi (medium dpi), 
+	\item hdpi (high dpi), 
+	\item xhdpi (extra high dpi)
+	\item  xxhdpi
+\end{enumerate}
+
+This is important when we use drawables (i.e bitmaps), because we have to create several images according to the different screen resolutions.
 
 There are some best practices regarding the user interface which we would already like to give:
 
@@ -47,9 +59,9 @@ There are some best practices regarding the user interface which we would alread
 	
 	
 	\begin{enumerate}
-		\item Don’t use fixed dimensions expressed in pixel, instead we should use dp.
-		\item Provide several layout structures for different screen size, we can do it creating several layout files.
-		\item Provide several bitmap with different resolution for different screen resolutions. 
+		\item Don’t use fixed dimensions expressed in pixel, instead we should use dp and sp.
+		\item Provide several layout structures for different screen sizes, we can do it creating several layout files in the res directory.
+		\item Provide several bitmaps with different resolution for different screen resolutions. 
 	\end{enumerate}
 
 \end{framed}
@@ -61,53 +73,47 @@ The View class is the basic class that all the components extend. A View draws s
 responsible to handle events while user interacts with it. Even the generic ViewGroup class extends View. A ViewGroup
 is a special View that holds other views and places these views following some rules.
 
-
 All views have a set of properties: These properties affect the way the view is rendered. There is a set of properties common
 to all views, while there are some other properties depending on the type of view.
 
 \begin{description}
-	\item[Focus] The system manages the focus on each view and depending on the user input, we can modify and force the focus on a
-	specific view.
-	\item[Listeners] All views have listeners which are used to handle events when the user interacts with the view. We can register our
-	app to listen to specific events that occur on a view.
+	\item[Focus] The system manages the focus on each view and depending on the user input, we can modify and force the focus on a specific view.
+	\item[Listeners] All views have listeners which are used to handle events when the user interacts with the view. We can register our app to listen to specific events that occur on a view.
 	\item[Visibility] We can control if a view is visible or not and we can change the view visibility at runtime too.
 \end{description}
-Two properties that play an important role are \texttt{layout\_width} and \texttt{layout\_height}. These two properties define how large
-and how tall should be the view. We can use two predefined values:
+
+Two properties that play an important role are \texttt{layout\_width} and \texttt{layout\_height}. These two properties define how large and how tall should be the view. We can use two predefined values:
 \begin{itemize}
 	\item \texttt{MATCH\_PARENT} we want our view as big as its parent that holds it
-	\item \texttt{WRAP\_CONTENT} we
-	specify that our view must be big enough to hold its content.
+	\item \texttt{WRAP\_CONTENT} we specify that our view must be big enough to hold its content.
 \end{itemize}
+
 There is another option: using a numeric value. In this case, we specify the exact measure of our view. In this case, the best
 practice suggests using dp unit measure so that our view can be adapted to different screen density.
 
 
-\subsection{You should listen to your View}
-Listeners are an important aspect when developing UIs in Android. Generally speaking, when an user interacts with our app
-interface, the system “creates” some events. Each view that builds our interface is capable of generating events and providing the means to handle them.
-
-In our Activity there is a method called \texttt{findViewById} that can be used to get the reference to a View defined in our user
-interface. Once we have the reference, we can handle the user click:
-
-\begin{android}
-b.setOnClickListener(new View.OnClickListener() {
-	@Override
-	public void onClick(View v) {
-		// here we handle the event
-	}
-});	
-\end{android}
-
 \section{Containers and Layoutmanagers}
 There are different layout managers which will layout the view it includes. We will not cover them here in detail, but you get a complete overview by checking out the application \texttt{Containers} from \cite{murphymarkl.2017}.
 
+\subsection{Lineairlayout}
+In a LinearLayout, each widget is placed next to the previous one – either horizontally or vertically. This also makes it perfect for building zoned layouts.
 
+\subsection{Lineairlayout}
+In a LinearLayout, each widget is placed next to the previous one – either horizontally or vertically. This also makes it perfect for building zoned layouts.
 
+\subsection{Table Layout}
+A layout that arranges its children into rows and columns. A TableLayout consists of a number of TableRow objects, each defining a row (actually, you can have other children, which will be explained below). TableLayout containers do not display border lines for their rows, columns, or cells. Each row has zero or more cells; each cell can hold one View object. The table has as many columns as the row with the most cells. A table can leave cells empty. 
+
+\subsection{ConstraintLayout}
+ConstraintLayout allows you to create large and complex layouts with a flat view hierarchy (no nested view groups). 
+
+To define a view's position in ConstraintLayout, you must add at least one horizontal and one vertical constraint for the view. Each constraint represents a connection or alignment to another view, the parent layout, or an invisible guideline. Each constraint defines the view's position along either the vertical or horizontal axis; so each view must have a minimum of one constraint for each axis, but often more are necessary.
+
+Working with this layout it explained in \url{https://developer.android.com/training/constraint-layout/}
 
 \section{UI consistency}
-One of the biggest efforts made by Google was to define a well defined set of rules that helps developers to create appealing user
-interfaces. At the same time, these rules help users to navigate through every app in the same way. We call this\textbf{ UI consistency}.
+One of the biggest efforts made by Google was to define a well defined set of rules that helps developers to create appealing user interfaces. At the same time, these rules help users to navigate through every app in the same way. We call this\textbf{ UI consistency}.
+
 Android, moreover, guarantees to the developers the required flexibility to customize the app look and feel and make it unique.
 These rules are known as UI patterns. Patterns are proven solution approaches to well known problems. Thus, having a well
 defined UI pattern catalog and knowing when and where apply them, we can create appealing apps that are not only full of
@@ -121,8 +127,7 @@ thing an user sees of our app. There are some specific patterns (see e.g. \cite{
 	\item \textbf{Fixed tabs} : when we want to give to
 	the user an overview of the different views present in our app, so that a user can switch easily between them to show different type of information. See an example here \cite{Tamada2013}
 	
-	\item \textbf{Spinner}: is used when we want to move directly to a specific view, this is the case of a calendar app when we can use spinner to
-	go directly to a specific month.
+	\item \textbf{Spinner}: is used when we want to move directly to a specific view, this is the case of a calendar app when we can use spinner to go directly to a specific month.
 	
 	\begin{xml}
 		<Spinner
@@ -130,7 +135,6 @@ thing an user sees of our app. There are some specific patterns (see e.g. \cite{
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content" />
 	\end{xml}
-	
 	
 	\item \textbf{Navigation drawer}: This is a sliding menu, usually at the left side of the
 	smartphone screen, that can be opened and closed by the user. This pattern can be used when we have a multiple top level view
@@ -171,25 +175,4 @@ When Android draws the screen, it draws the parent first and then the childer vi
 You can test overdraw using the Debug GPU Overdraw tool in the developer options menu (see \cite{Google2017b}).
 
  
-\newpage
-\section{Exercise}
-
-\begin{exercise}
-	Pixel art is a form of digital art, created through the use of software, where images are edited on the pixel level. In this exercise you will have to create an application which is able to create such a pixel art drawing. 
-	
-	Let us have a look at the PixelArt website: \href{https://www.pixilart.com/draw}{PixelArt}. The basic idea of your application is that you make this into an Android application. The following requirements should definitely be fulfilled:
-	\begin{enumerate}
-		\item Fill in a pixel with a background color by tapping, or sliding over the pixels. There should be a possibility to choose the color for the background.
-		\item An extra choice of drawing method: adding text in pixel format, or drawing a circle, or drawing a line or \dots It us up to you which kind of extra drawing technique you implement.
-	\end{enumerate}
-	Other extra feature will end up in extra credits for this application. 
-	
-	Off course copy pasting code from existing repositories will end up in a not so pleasant time during the examination.
-	
-	\label{ex:dotpict}
-\end{exercise}
-	\begin{figure}[b]
-		\centering
-	\includegraphics[width=0.4\textwidth]{images/ui/pixelart}
-\end{figure}
 
