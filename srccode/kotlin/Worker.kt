@@ -1,12 +1,7 @@
 package d
 
-class Worker(name: String) {
+class Worker(var name: String) {
 
-    var name : String
-
-    init {
-        this.name = name;
-    }
 
     fun work(){
         println("$name is working hard!")
