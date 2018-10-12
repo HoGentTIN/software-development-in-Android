@@ -29,158 +29,80 @@ You should design each fragment as a modular and reusable activity component. Th
 \end{figure}
 
 \section{How to work with activities and fragments}
-To explain the use of fragments we will be looking at an example implementation from  \cite{murphymarkl.2017}. You can find the link \href{https://github.com/commonsguy/cw-omnibus/tree/master/Fragments/Static}{here}.
-
 \begin{framed}
-	When implementing the exercises for this course you have to use github. Off course you know you do not put every file of your project on the repository. Look how the author of \cite{murphymarkl.2017} have done this on their repository. 
+	The source code which accompanies this chapter can be found on the following link: \url{https://github.com/eothein/rage_against_the_app}. It is an an adaptatjon of the project from \cite{Gleason2017a}
+
 \end{framed}
 
-\subsection{Create a fragment class}
-
-To create a fragment, you must create a subclass of Fragment (or an existing subclass of it). The Fragment class has code that looks a lot like an Activity. It contains callback methods similar to an activity, such as onCreate(), onStart(), onPause(), and onStop().
-
-To provide a layout for a fragment, you must implement the \texttt{onCreateView()} callback method, which the Android system calls when it's time for the fragment to draw its layout. Your implementation of this method must return a \texttt{View} that is the root of your fragment's layout.
-
-
-\begin{android}
-	import android.os.Bundle;
-	import android.support.v4.app.Fragment;
-	import android.view.LayoutInflater;
-	import android.view.ViewGroup;
-	
-	public class ArticleFragment extends Fragment {
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-		Bundle savedInstanceState) {
-			// Inflate the layout for this fragment
-			return inflater.inflate(R.layout.article_view, container, false);
-		}
-	}
-\end{android}
-
-\subsection{Adding a Fragment (XML)}
-To add the fragment, you can
-declare the fragment inside the activity's layout file.
-	In this case, you can specify layout properties for the fragment as if it were a view. You have to provide the name of the fragment class file.
-
-
-\begin{xml}
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="horizontal"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
-	
-	<fragment android:name="com.example.android.fragments.HeadlinesFragment"
-	android:id="@+id/headlines_fragment"
-	android:layout_weight="1"
-	android:layout_width="0dp"
-	android:layout_height="match_parent" />
-	
-	<fragment android:name="com.example.android.fragments.ArticleFragment"
-	android:id="@+id/article_fragment"
-	android:layout_weight="2"
-	android:layout_width="0dp"
-	android:layout_height="match_parent" />
-	
-	</LinearLayout>
-\end{xml}
-
-\begin{android}
-	import android.os.Bundle;
-	import android.support.v4.app.FragmentActivity;
-	
-	public class MainActivity extends FragmentActivity {
-		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			setContentView(R.layout.news_articles);
-		}
-	}
-\end{android}
-
-\subsection{Adding a Fragment (Programmatically)}
-To add the fragment programmatically, you can add the fragment to an existing ViewGroup using FragmentTransaction. 
-
-There are some key concepts which you need to take in mind:
-\begin{itemize}
-	\item To perform a transaction such as add or remove a fragment, you must use the FragmentManager to create a FragmentTransaction.
-	\item You should add the initial fragment(s) to the activity during the activity's onCreate() method.
-	\item  Your activity layout must include a container View in which you can insert the fragment. Most of the times this will be an empty FrameLayout.
-\end{itemize}
-
-Doing the actual placement, or change or delete:
-
-\begin{android}
-	 getSupportFragmentManager().beginTransaction().*
-\end{android}
-
- A simple example can be found \href{https://github.com/commonsguy/cw-omnibus/tree/master/Fragments/Dynamic}{here}.
-
-
-
-\subsection{The v4 Support library}
-In Android, when using fragments, there are two alternative fragment implementations you can use. One type is the fragment that is provided by the platform version. A platform version corresponds to the version of Android that a user is running. For example, a device running Android 6.0 (SDK Version 23) would be running platform version 23 of the library.
-The second type is a support library fragment. When you include a support library, it is added to your project in the same manner as any third-party library. This has two benefits when developing applications for multiple versions of Android.
-First, it ensures that you have consistency in your code and functionality across different devices and platform versions. This means that bugs, and fixes, will be more consistent across different versions of Android using these libraries.
-
-Second, when new features are added to the latest version of Android, the Android team will often back-port these features via the support library in order for developers to use on older versions of Android.
-
-\begin{framed}
-If you are writing an application that will be targeting multiple versions of Android on multiple devices, you should use support libraries for Fragments. You should also use the support library for any other functionality in your application when available. This is considered a best practice by most senior Android developers and the Core Android team. The only time you might want to use a platform library is if you are, in fact, doing very specialized development for an app that is only targeting one version of Android.
-\end{framed}
-
-\section{Fragment Life cycle}
-Fragments have lifecycle methods, just like activities do. In fact, they support most
-of the same lifecycle methods as activities. You can see an overview in figure \ref{fig:fraglifecycle}.
-
+To create a fragment, you must create a subclass of Fragment (or an existing subclass of it). The Fragment class has code that looks a lot like an Activity. It contains callback methods similar to an activity, such as onCreate(), onStart(), onPause(), and onStop(). In fact, if you're converting an existing Android application to use fragments, you might simply move code from your activity's callback methods into the respective callback methods of your fragment.
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.8\textwidth]{images/fragments/lifecycle.jpg}
-	\caption{Android fragments have their own life cycle very similar to an android activity. Retreived from \cite{Point2017}}
-	\label{fig:fraglifecycle}
+	\includegraphics[width=0.5\textwidth]{images/fragments/lifecycle.png}
+	\label{fig:fragcycle}
+	\caption{The lifecycle of a fragment (while its activity is running).}
 \end{figure}
 
-The following lifecycle events come into play when you add a fragment:
-\begin{description}
+\subsection{Creating a Fragment}
+In Kotlin you delcare a Fragment by extending the Fragment class. 
+\lstinputlisting[firstline=24,lastline=53,language=Kotlin, caption={Creating a Fragment}, label=code:fragment]{srccode/fragments/fragments/RageComicDetailsFragment.kt}
 
-\item[onAttach] : When the fragment attaches to its host activity.
-\item[onCreate] : When a new fragment instance initializes, which always happens after it attaches to the host — fragments are a bit like viruses.
-\item[onCreateView] : When a fragment creates its portion of the view hierarchy, which is added to its activity’s view hierarchy.
-\item[onActivityCreated]: When the fragment’s activity has finished its own onCreate event.
-\item[onStart] : When the fragment is visible; a fragment starts only after its activity starts and often starts immediately after its activity does.
-\item[onResume] : When the fragment is visible and interactable; a fragment resumes only after its activity resumes and often resumes immediately after the activity does.
-\item[onPause] : When the fragment is no longer interactable; this occurs when either the fragment is about to be removed or replaced or when the fragment’s activity pauses.
-\item[onStop] : When the fragment is no longer visible; this occurs either after the fragment is about to be removed or replaced or when the fragment’s activity stops.
-\item[onDestroyView] : When the view and related resources created in onCreateView are removed from the activity’s view hierarchy and destroyed.
-\item[onDestroy] : When the fragment does its final clean up.
-\item[onDetach] : When the fragment is detached from its activity.
-\end{description}
-Almost the same rules apply for fragments as do for activities. It is up to the reader to look when each life cycle method is called and when to use it. 
+This is what this code does:
+\begin{enumerate}
+	\item Declares RageComicDetailsFragment as a subclass of Fragment.
+	\item Provides a method for creating new instances of the fragment, a factory method.
+\end{enumerate}
 
-\section{Communication with other Fragments and Activities}
+In most cases you need the following methods in order for a Fragment to work.
 
-Often you will want one Fragment to communicate with another, for example to change the content based on a user event. All Fragment-to-Fragment communication is done through the associated Activity. 
-\begin{framed}
-Two Fragments should never communicate directly.
-\end{framed}
-To allow a Fragment to communicate up to its Activity, you can define an interface in the Fragment class and implement it within the Activity. The Fragment captures the interface implementation during its onAttach() lifecycle method and can then call the Interface methods in order to communicate with the Activity. This way the Fragment can deliver messages to the activity by calling the interface method with a callback instance of the interface defined. 
+\begin{itemize}
+	\item onCreate()
+	The system calls this when creating the fragment. Within your implementation, you should initialize essential components of the fragment that you want to retain when the fragment is paused or stopped, then resumed.
+	\item onCreateView()
+	The system calls this when it's time for the fragment to draw its user interface for the first time. To draw a UI for your fragment, you must return a View from this method that is the root of your fragment's layout. You can return null if the fragment does not provide a UI.
+	\item onPause()
+	The system calls this method as the first indication that the user is leaving the fragment (though it doesn't always mean the fragment is being destroyed). This is usually where you should commit any changes that should be persisted beyond the current user session (because the user might not come back).
+\end{itemize}
 
-\section{Communicating from the Activity to the Fragment}
-The host activity can deliver messages to a fragment by capturing the Fragment instance with \texttt{findFragmentById()}, then directly call the fragment's public methods.
+\subsection{Adding a Fragment to an Activity}
 
+Adding the fragment to an activity can either be done by declaring it in the XML layout file of the activity, or dynamically in the code by using FragmentTransactions.
+\subsubsection{Static Fragments}
+\lstinputlisting[firstline=1,lastline=5,language=XML, caption={Adding the fragment by delcaring it in XML}, label=code:fragmentXML]{srccode/fragments/layout/dummy.xml}
+\subsubsection{Dynamic Fragments}
+First, you grab the FragmentManager by referencing supportFragmentManager.
 
-\section{Exercises}
-\begin{exercise}
-	Refactor the application you made in exercise \ref{ex:act1} and exercise \ref{ex:act2} in such a way that Fragments are used. You can decide yourself if you prefer dynamic of static fragment setup.
-\end{exercise}
+Then, you ask that FragmentManager to start a new transaction by calling beginTransaction(). Next, you specify the add operation that you want by calling add and passing in:
 
-\begin{exercise}
-	Refactor the application you made in exercise \ref{ex:dotpict}. Your application should:
-	\begin{enumerate}
-		\item run on large and small devices
-		\item landscape and portrait mode
-		\item have a layout where the toolbox (tools for drawing your dotpict) is in a fragment, and the drawing itself in another fragment
-		\item apply dual pane mode, and single pane mode depending on the orientation or screen size of the device.
-	\end{enumerate}
-\end{exercise}
+\begin{enumerate}
+\item The view ID of a container for the fragment’s view hierarchy in the activity’s layout. If you take a look at the layout you'll find single pane.
+\item The fragment instance to be added.
+\item A string that acts as a tag/identifier for the fragment instance. This allows the FragmentManager to later retrieve the fragment for you.
+\end{enumerate}
+
+Finally, you ask the FragmentManager to execute the transaction by calling commit().
+
+\lstinputlisting[firstline=74,lastline=82,language=Kotlin, caption={Adding the fragment by using transactions.}, label=code:fragmentCode]{srccode/fragments/activities/MainActivity.kt}
+
+Of course your layout file should have a place holder for your Fragment.
+
+\lstinputlisting[firstline=22,lastline=31,language=XML, caption={The XML layout file for an activity with a dynamic Fragment. The Framelayout servers as a place holder}, label=code:dynamicFragment]{srccode/fragments/layout/activity_main.xml}
+
+As seen above, managing fragments in your activity requires the FragmentManager. 
+
+Some things that you can do with FragmentManager include:
+
+\begin{enumerate}
+	\item Get fragments that exist in the activity, with findFragmentById() (for fragments that provide a UI in the activity layout) or \item findFragmentByTag() (for fragments that do or don't provide a UI).
+	\item Pop fragments off the back stack, with popBackStack() (simulating a Back command by the user).
+	\item Register a listener for changes to the back stack, with addOnBackStackChangedListener().
+\end{enumerate}
+
+\subsection{Communicating with the Activity}
+You can  define a callback interface inside the fragment and require that the host activity implement it. When the activity receives a callback through the interface, it can share the information with other fragments in the layout as necessary.
+
+\lstinputlisting[firstline=127,lastline=129,language=Kotlin, caption={A callback interface to communicate interactions with the activity or other Fragments}, label=code:dynamicFragment]{srccode/fragments/fragments/RageComicListFragment.kt}
+
+The activity should implement this interface:
+\lstinputlisting[firstline=124,lastline=148,language=Kotlin, caption={Implementing the interface callback}, label=code:activitycallback]{srccode/fragments/activities/MainActivity.kt}
+
