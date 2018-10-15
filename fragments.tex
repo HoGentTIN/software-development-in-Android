@@ -28,7 +28,7 @@ You should design each fragment as a modular and reusable activity component. Th
 	\caption{You should design each fragment as a modular, adaptable and reusable component.}
 \end{figure}
 
-\section{How to work with activities and fragments}
+\section{How to work with activities and fragments - Dual Panze}
 \begin{framed}
 	The source code which accompanies this chapter can be found on the following link: \url{https://github.com/eothein/rage_against_the_app}. It is an an adaptatjon of the project from \cite{Gleason2017a}
 
@@ -52,12 +52,12 @@ Managing the lifecycle of a fragment is a lot like managing the lifecycle of an 
 
 \subsection{Creating a Fragment}
 In Kotlin you delcare a Fragment by extending the Fragment class. 
-\lstinputlisting[firstline=24,lastline=53,language=Kotlin, caption={Creating a Fragment}, label=code:fragment]{srccode/fragments/fragments/RageComicDetailsFragment.kt}
+\lstinputlisting[firstline=18,lastline=42	,language=Kotlin, caption={Creating a Fragment}, label=code:fragment]{srccode/fragments//RagecomicDetailFragment.kt}
 
 This is what this code does:
 \begin{enumerate}
 	\item Declares RageComicDetailsFragment as a subclass of Fragment.
-	\item Provides a method for creating new instances of the fragment, a factory method.
+	\item An onCreate method which initialises the dependencies and or restores the state
 \end{enumerate}
 
 In most cases you need the following methods in order for a Fragment to work.
@@ -70,13 +70,15 @@ In most cases you need the following methods in order for a Fragment to work.
 	\item onPause()
 	The system calls this method as the first indication that the user is leaving the fragment (though it doesn't always mean the fragment is being destroyed). This is usually where you should commit any changes that should be persisted beyond the current user session (because the user might not come back).
 \end{itemize}
+Also like an activity, you can preserve the UI state of a fragment across configuration changes and process death using a combination of onSaveInstanceState(Bundle), ViewModel, and persistent local storage. 
+
+The most significant difference in lifecycle between an activity and a fragment is how one is stored in its respective back stack. An activity is placed into a back stack of activities that's managed by the system when it's stopped, by default (so that the user can navigate back to it with the Back button, as discussed in Tasks and Back Stack). However, a fragment is placed into a back stack managed by the host activity only when you explicitly request that the instance be saved by calling addToBackStack() during a transaction that removes the fragment.
 
 \subsection{Adding a Fragment to an Activity}
 
 Adding the fragment to an activity can either be done by declaring it in the XML layout file of the activity, or dynamically in the code by using FragmentTransactions.
-\subsubsection{Static Fragments}
-\lstinputlisting[firstline=1,lastline=5,language=XML, caption={Adding the fragment by delcaring it in XML}, label=code:fragmentXML]{srccode/fragments/layout/dummy.xml}
-\subsubsection{Dynamic Fragments}
+
+\subsubsection{Adding a Fragment Dynamically}
 First, you grab the FragmentManager by referencing supportFragmentManager.
 
 Then, you ask that FragmentManager to start a new transaction by calling beginTransaction(). Next, you specify the add operation that you want by calling add and passing in:
@@ -87,13 +89,15 @@ Then, you ask that FragmentManager to start a new transaction by calling beginTr
 \item A string that acts as a tag/identifier for the fragment instance. This allows the FragmentManager to later retrieve the fragment for you.
 \end{enumerate}
 
+You can also remove or replace fragments one by another. 
+
 Finally, you ask the FragmentManager to execute the transaction by calling commit().
 
-\lstinputlisting[firstline=74,lastline=82,language=Kotlin, caption={Adding the fragment by using transactions.}, label=code:fragmentCode]{srccode/fragments/activities/MainActivity.kt}
+\lstinputlisting[firstline=137,lastline=140,language=Kotlin, caption={Replacing the fragment by using transactions.}, label=code:fragmentCode]{srccode/fragments/RagecomicListActivity.kt}
 
 Of course your layout file should have a place holder for your Fragment.
 
-\lstinputlisting[firstline=22,lastline=31,language=XML, caption={The XML layout file for an activity with a dynamic Fragment. The Framelayout servers as a place holder}, label=code:dynamicFragment]{srccode/fragments/layout/activity_main.xml}
+\lstinputlisting[firstline=33,lastline=37,language=XML, caption={The XML layout file for an activity with a dynamic Fragment. The Framelayout servers as a place holder}, label=code:dynamicFragment]{srccode/fragments/layout-w900dp/ragecomic_list.xml}
 
 As seen above, managing fragments in your activity requires the FragmentManager. 
 
@@ -108,8 +112,7 @@ Some things that you can do with FragmentManager include:
 \subsection{Communicating with the Activity}
 You can  define a callback interface inside the fragment and require that the host activity implement it. When the activity receives a callback through the interface, it can share the information with other fragments in the layout as necessary.
 
-\lstinputlisting[firstline=127,lastline=129,language=Kotlin, caption={A callback interface to communicate interactions with the activity or other Fragments}, label=code:dynamicFragment]{srccode/fragments/fragments/RageComicListFragment.kt}
 
-The activity should implement this interface:
-\lstinputlisting[firstline=124,lastline=148,language=Kotlin, caption={Implementing the interface callback}, label=code:activitycallback]{srccode/fragments/activities/MainActivity.kt}
+
+
 

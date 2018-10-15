@@ -1,5 +1,0 @@
-<fragment
-  android:id="@+id/details_fragment"
-  class="be.equality.RageComicDetailsFragment"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"/>
