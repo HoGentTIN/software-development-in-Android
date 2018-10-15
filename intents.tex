@@ -79,7 +79,7 @@ Tt’s good practice to determine if your call will resolve to an Activity befor
 if (somethingWeird && itDontLookGood) {
 	// Create the impliciy Intent to use to start a new Activity.
 	Intent intent =
-	new Intent(Intent.ACTION_DIAL, Uri.parse(“tel:555-2368”));
+	new Intent(Intent.ACTION_DIAL, Uri.parse("tel:555-2368"));
 	// Check if an Activity exists to perform this action.
 	PackageManager pm = getPackageManager();
 	ComponentName cn = intent.resolveActivity(pm);
@@ -87,7 +87,7 @@ if (somethingWeird && itDontLookGood) {
 		// If there is no Activity available to perform the action
 		// Check to see if the Google Play Store is available.
 		Uri marketUri =
-		Uri.parse(“market://search?q=pname:com.myapp.packagename”);
+		Uri.parse("market://search?q=pname:com.myapp.packagename");
 		Intent marketIntent = new Intent(Intent.ACTION_VIEW).setData(marketUri);
 		// If the Google Play Store is available, use it to download an application
 		// capable of performing the required action. Otherwise log an
@@ -96,7 +96,7 @@ if (somethingWeird && itDontLookGood) {
 			startActivity(marketIntent);
 		}
 		else{
-			Log.d(TAG, “Market client not available.”);
+			Log.d(TAG, "Market client not available.");
 		}
 	}
 	else {

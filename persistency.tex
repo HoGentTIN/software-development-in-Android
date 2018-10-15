@@ -17,11 +17,11 @@ SharedPreferences mySharedPreferences = getSharedPreferences(MY_PREFS,
 Activity.MODE_PRIVATE);
 SharedPreferences.Editor editor = mySharedPreferences.edit();
 // Store new primitive types in the shared preferences object.
-editor.putBoolean(“isTrue”, true);
-editor.putFloat(“lastFloat”, 1f);
-editor.putInt(“wholeNumber”, 2);
-editor.putLong(“aNumber”, 3l);
-editor.putString(“textEntryValue”, “Not Empty”);
+editor.putBoolean("isTrue", true);
+editor.putFloat("lastFloat", 1f);
+editor.putInt("wholeNumber", 2);
+editor.putLong("aNumber", 3l);
+editor.putString("textEntryValue", "Not Empty");
 editor.apply();
 \end{android}
 
@@ -31,12 +31,12 @@ Accessing Shared Preferences, like editing and saving them, is done using the ge
 
 \begin{android}
 // Retrieve the saved values.
-boolean isTrue = mySharedPreferences.getBoolean(“isTrue”, false);
-float lastFloat = mySharedPreferences.getFloat(“lastFloat”, 0f);
-int wholeNumber = mySharedPreferences.getInt(“wholeNumber”, 1);
-long aNumber = mySharedPreferences.getLong(“aNumber”, 0);
+boolean isTrue = mySharedPreferences.getBoolean("isTrue", false);
+float lastFloat = mySharedPreferences.getFloat("lastFloat", 0f);
+int wholeNumber = mySharedPreferences.getInt("wholeNumber", 1);
+long aNumber = mySharedPreferences.getLong("aNumber", 0);
 String stringPreference =
-mySharedPreferences.getString(“textEntryValue”, “”);
+mySharedPreferences.getString("textEntryValue", "");
 \end{android}
 
 \section{SQLLite}
