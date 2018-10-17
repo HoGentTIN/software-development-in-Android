@@ -94,6 +94,7 @@ As they do so, they transition through four possible states.
 For more information regarding the different life cylce callbacks, we refer the reader to \cite{Developers19}.
 
 \subsection{Saving and restoring the state}
+\label{sec:saveAndRestoreState}
 There are a few scenarios in which your activity is destroyed due to normal app behavior, such as when the user presses the Back button or your activity signals its own destruction by calling the finish() method.
 The system may also destroy the process containing your activity to recover memory if the activity is in the Stopped state and hasn't been used for a long time, or if the foreground activity requires more resources.
 
