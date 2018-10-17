@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+    <FrameLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/recycler_layout_spacing">
+
+        <ImageView
+            android:id="@+id/list_comic_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+
+            />
+
+        <TextView
+            android:id="@+id/listname"
+            style="@style/TextAppearance.AppCompat.Subhead.Inverse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/blue_grey_800_50p"
+            android:minHeight="@dimen/recycler_item_footer_height_min"
+            android:paddingBottom="@dimen/recycler_item_footer_padding"
+            android:paddingLeft="@dimen/recycler_item_footer_padding"
+            android:paddingRight="@dimen/recycler_item_footer_padding"
+            android:paddingTop="@dimen/recycler_item_footer_padding"
+            tools:text="@{comic.name}" />
+
+    </FrameLayout>
+</LinearLayout>

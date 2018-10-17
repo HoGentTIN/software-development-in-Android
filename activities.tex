@@ -3,7 +3,7 @@
 
 \chapter{Activities and Their Lifecycles}
 An activity is a single, focused thing that the user can do.
-Almost all activities interact with the user, so the Activity class takes care of creating a window for you in which you can place your UI with \texttt{setContentView(View)}. \todo{check if still applicable}
+Almost all activities interact with the user, so the Activity class takes care of creating a window for you in which you can place your UI with \texttt{setContentView(View)}. 
 Unlike programming paradigms in which apps are launched with a main() method, the Android system initiates code in an Activity instance by invoking specific callback methods that correspond to specific stages of its lifecycle.
 	
 \begin{framed}
@@ -11,12 +11,12 @@ Unlike programming paradigms in which apps are launched with a main() method, th
 	The link contains the steps which youy need to take to build the application.
 	The final code can be found on \url{https://github.com/eothein/ActivityProject}	
 \end{framed}
-\todo{Check of links juist zijn Aanpassen}
+
 
 \section{Activities}
 The Activity class serves as the entry point for an app’s interaction with the user, providing the window in which the app draws its UI.
 This window typically fills the screen, but may be smaller than the screen and float on top of other windows.
-You implement an activity as a subclass of the Activity class.
+You implement an activity as a subclass of the Activity cvelass.
 Generally, one activity implements one screen in an app.
 For instance, one of an app’s activities may implement the Preferences screen, while another activity implements the Compose Email screen.
 
@@ -168,10 +168,10 @@ The next chapters will take a closer look at it.
 
 \begin{itemize}
 	\item It includes nodes for each of the Activities, Services, Content Providers, and Broadcast Receivers that make up your application and, using Intent Filters and Permissions, determines how they interact with each other and with other applications.
-	\item The manifest can also specify application metadata (such as its icon, version number, or theme), and additional top-level nodes can specify any required permissions, unit tests, and define hardware, screen, or platform requirements.
+	\item The manifest can also specify application metadata (such as its icon or theme), and additional top-level nodes can specify any required permissions, unit tests, and define hardware, screen, or platform requirements.
 	\item The manifest is made up of a root manifest tag with a package attribute set to the project’s package.
 		It should also include an xmlns:android attribute that supplies several system attributes used within the file.
-	\item Use the versionCode attribute to define the current application version as an integer that increases with each version iteration, and use the versionName attribute to specify a public version that will be displayed to users.
+
 \end{itemize}
 
 \section{Externalizing Resources}

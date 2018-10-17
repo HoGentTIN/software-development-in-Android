@@ -27,9 +27,9 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
 
     /**
      * This method is called right after onPause(), when the activity is no longer visible to the user,
-     * and it’s a good place to save data that you want to commit to the disk.
-     * It’s followed by either onRestart(), if this activity is coming back to the foreground, or onDestroy()
-     * if it’s being released from memory.
+     * and it's a good place to save data that you want to commit to the disk.
+     * It's followed by either onRestart(), if this activity is coming back to the foreground, or onDestroy()
+     * if it's being released from memory.
      *
      * We are storing the instance state from the activity in the sharedpreferences.
      */
