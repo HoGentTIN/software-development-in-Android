@@ -109,7 +109,8 @@ ConstraintLayout allows you to create large and complex layouts with a flat view
 
 To define a view's position in ConstraintLayout, you must add at least one horizontal and one vertical constraint for the view. Each constraint represents a connection or alignment to another view, the parent layout, or an invisible guideline. Each constraint defines the view's position along either the vertical or horizontal axis; so each view must have a minimum of one constraint for each axis, but often more are necessary.
 
-Working with this layout it explained in \url{https://developer.android.com/training/constraint-layout/}
+Working with this layout is explained in 
+\url{https://developer.android.com/training/constraint-layout/}
 
 \section{UI consistency}
 One of the biggest efforts made by Google was to define a well defined set of rules that helps developers to create appealing user interfaces. At the same time, these rules help users to navigate through every app in the same way. We call this\textbf{ UI consistency}.
@@ -128,13 +129,6 @@ thing an user sees of our app. There are some specific patterns (see e.g. \cite{
 	the user an overview of the different views present in our app, so that a user can switch easily between them to show different type of information. See an example here \cite{Tamada2013}
 	
 	\item \textbf{Spinner}: is used when we want to move directly to a specific view, this is the case of a calendar app when we can use spinner to go directly to a specific month.
-	
-	\begin{xml}
-		<Spinner
-		android:id="@+id/spinner"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" />
-	\end{xml}
 	
 	\item \textbf{Navigation drawer}: This is a sliding menu, usually at the left side of the
 	smartphone screen, that can be opened and closed by the user. This pattern can be used when we have a multiple top level view

@@ -29,10 +29,12 @@ You should design each fragment as a modular and reusable activity component. Th
 \end{figure}
 
 \section{How to work with activities and fragments - Dual Panze}
-\begin{framed}
+
+\begin{example}
 	The source code which accompanies this chapter can be found on the following link: \url{https://github.com/eothein/rage_against_the_app}. It is an an adaptatjon of the project from \cite{Gleason2017a}
 
-\end{framed}
+\end{example}
+
 
 To create a fragment, you must create a subclass of Fragment (or an existing subclass of it). The Fragment class has code that looks a lot like an Activity. It contains callback methods similar to an activity, such as onCreate(), onStart(), onPause(), and onStop(). In fact, if you're converting an existing Android application to use fragments, you might simply move code from your activity's callback methods into the respective callback methods of your fragment.
 
@@ -97,7 +99,7 @@ Finally, you ask the FragmentManager to execute the transaction by calling commi
 
 Of course your layout file should have a place holder for your Fragment.
 
-\lstinputlisting[firstline=33,lastline=37,language=XML, caption={The XML layout file for an activity with a dynamic Fragment. The Framelayout servers as a place holder}, label=code:dynamicFragment]{srccode/fragments/layout-w900dp/ragecomic_list.xml}
+\lstinputlisting[firstline=33,lastline=37,language=kxml, caption={The XML layout file for an activity with a dynamic Fragment. The Framelayout servers as a place holder}, label=code:dynamicFragment]{srccode/fragments/layout-w900dp/ragecomic_list.xml}
 
 As seen above, managing fragments in your activity requires the FragmentManager. 
 

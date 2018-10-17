@@ -641,6 +641,25 @@ breakatwhitespace=false,        % sets if automatic breaks should only happen at
 	morestring=[b]",
 	morestring=[s]{"""*}{*"""},
 }
+
+\lstdefinelanguage{kxml}{
+	keywords={android:},
+	keywordstyle=\color{HoGentBlue}\bfseries,
+	ndkeywords={@Deprecated, @JvmName, @JvmStatic, @JvmOverloads, @JvmField, @JvmSynthetic, Iterable, Int, Long, Integer, Short, Byte, Float, Double, String, Runnable, Array},
+	ndkeywordstyle=\color{HoGentBlue}\bfseries,
+	emph={println, return@, forEach, map, mapNotNull, first, filter, firstOrNull, lazy, delegate},
+	emphstyle={\color{HoGentBlue}},
+	identifierstyle=\color{black},
+	sensitive=true,
+	commentstyle=\color{gray}\ttfamily,
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	stringstyle=\color{HoGentAccent3}\ttfamily,
+	morestring=[b]",
+	morestring=[s]{"""*}{*"""},
+}
+
+
 \lstnewenvironment{kotlin}
 {\lstset{language=kotlin,
 		keywordstyle=\color{HoGentBlue},      % keyword style
