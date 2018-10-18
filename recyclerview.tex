@@ -1,166 +1,147 @@
 \chapterimage{images/recycler/recycling.jpg}
 \chapter{Recyclerview}
-In 2014, Google released RecyclerView , via the Android Support package.
-Developers can add the recyclerview-v7 to their projects and use RecyclerView. In this chapter, we will review RecyclerView from the ground up, starting with basic
+In 2014, Google released RecyclerView , via the Android Support package. Developers can add the recyclerview-v7 to their projects and use RecyclerView. In this chapter, we will review RecyclerView from the ground up, starting with basic
 operation.
 
 Before you are able to use the recylceview,  open build.gradle (app) and add the dependencies needed.
 
-\begin{xml}
-    compile 'com.android.support:recyclerview-v7:+'
-	compile 'com.android.support:cardview-v7:+'
-\end{xml}
+
+\begin{lstlisting}
+dependencies {
+	implementation 'com.android.support:recyclerview-v7:28.0.0'
+}
+\end{lstlisting}
+
+
+\begin{example}
+	The code examples for this chapter is the same code example as for the Fragment application, where we will focus on the  \lstinline!RecyclerView!.
+\end{example}
 
 \section{What is a recyclerview}
-The RecyclerView is a new ViewGroup that is prepared to render any adapter-based view. It is supposed to be the successor of ListView and GridView, and it can be found in the latest support-v7 version. One of the reasons is that RecyclerView has a more extensible framework, especially since it provides the ability to implement both horizontal and vertical layouts. Use the RecyclerView widget when you have data collections whose elements change at runtime based on user action or network events.
+The \lstinline!RecyclerView! is a new \lstinline!ViewGroup! that is prepared to render any adapter-based view. It is supposed to be the successor of \lstinline!ListView! and \lstinline!GridView!, and it can be found in the \lstinline!support-v7! version. One of the reasons is that \lstinline!RecyclerView! has a more extensible framework, especially since it provides the ability to implement both horizontal and vertical layouts. Use the RecyclerView widget when you have data collections whose elements change at runtime based on user action or network events.
 
-To use a recyclerview, you will need the following things:
+To use a \lstinline!RecyclerView!, you will need the following things:
 \begin{enumerate}
-	\item RecyclerView.Adapter - To handle the data collection and bind it to the view
-	\item A layout file defining the row layout in the recyclerview. Just a note here: when you create the item layout of the RecyclerView don’t forget to add the following lines in the ViewGroup container of the layout. This lines of code will add the ripple effect to the RecyclerView elements.
+	\item \lstinline!RecyclerView.Adapter! - To handle the data collection and bind it to the view
+	\item A layout file defining the row layout in the \lstinline!RecyclerView!. Just a note here: when you create the item layout of the \lstinline!RecyclerView! don’t forget to add the following lines in the ViewGroup container of the layout. This lines of code will add the ripple effect to the RecyclerView elements.
 	\begin{enumerate}
-		\item  android:clickable="true"
-		\item android:focusable="true"
-		\item android:foreground="?android:attr/selectableItemBackground"
+		\item  \lstinline!android:clickable="true"!
+		\item \lstinline!android:focusable="true"!
+		\item \lstinline!android:foreground="?android:attr/selectableItemBackground"!
 	\end{enumerate}
-	\item LayoutManager - Helps positioning the items
-	\item ItemAnimator - Helps with animating the items for common operations such as Addition or Removal of item
+	\item \lstinline!LayoutManager! - Helps positioning the items
+	\item \lstinline!ItemAnimator! - Helps with animating the items for common operations such as Addition or Removal of item
 \end{enumerate}
 
+
+\section{Basic operation}
+When the list is first populated, it creates and binds some view holders on either side of the list. For example, if the view is displaying list positions 0 through 9, the \lstinline!RecyclerView! creates and binds those view holders, and might also create and bind the view holder for position 10. That way, if the user scrolls the list, the next element is ready to display.
+
+As the user scrolls the list, the \lstinline!RecyclerView! creates new view holders as necessary. It also saves the view holders which have scrolled off-screen, so they can be reused. If the user switches the direction they were scrolling, the view holders which were scrolled off the screen can be brought right back. On the other hand, if the user keeps scrolling in the same direction, the view holders which have been off-screen the longest can be re-bound to new data. The view holder does not need to be created or have its view inflated; instead, the app just updates the view's contents to match the new item it was bound to.
+
+When the displayed items change, you can notify the adapter by calling an appropriate \lstinline!RecyclerView.Adapter.notify()! method. The adapter's built-in code then rebinds just the affected items.
 
 \section{Components and Workflow}
 
 \begin{figure}
 	\includegraphics[width=\textwidth]{images/recycler/components.png}
-	\caption{ RecyclerView is a major enhancement over ListView. It contains many new features like ViewHolder, ItemDecorator, LayoutManager, and SmoothScroller. But one thing that certainly gives it an edge over the ListView is; the ability to have animations while adding or removing an item. }
+	\caption{ \lstinline!RecyclerView! is a major enhancement over \lstinline!ListView!. It contains many new features like \lstinline!ViewHolder!, \lstinline!ItemDecorator!, \lstinline!LayoutManager!, and \lstinline!SmoothScroller!. But one thing that certainly gives it an edge over the \lstinline!ListView! is; the ability to have animations while adding or removing an item. }
 	\label{fig:recyclercomponents}
 \end{figure}
 
 
 \subsection{RecyclerView.Adapter}
-RecyclerView uses an adapter to help convert our model data
-into visual representations. A RecyclerView.Adapter  uses a generic to identify a ViewHolder that will be responsible for doing the work to actually tie
-model data to row widgets.
+\lstinline!RecyclerView! uses an adapter to help convert our model data
+into visual representations. A \lstinline!RecyclerView.Adapter!  uses a generic to identify a \lstinline!ViewHolder! that will be responsible for doing the work to actually tie model data to row widgets.
 
 RecyclerView.Adapter has three abstract methods that need to be implemented.
 
 \begin{enumerate}
-	\item getItemCount() , which fills the same role as does getCount() indicating how many items there will be in the RecyclerView
-	\item onCreateViewHolder()  needs to create, configure,
+	\item \lstinline!getItemCount()!, which fills the same role as does \lstinline!getCount()! indicating how many items there will be in the RecyclerView
+	\item \lstinline!onCreateViewHolder()!  needs to create, configure,
 	a ViewHolder for a particular row of our list. It is passed two parameters:
 	\begin{enumerate}
-		\item a ViewGroup that will hold the views managed by the holder, mostly for use
+		\item a \lstinline!ViewGroup! that will hold the views managed by the holder, mostly for use
 		with layout inflation, and
-		\item an int that is the particular view type we are using, for cases where we have
+		\item an \lstinline!Int! that is the particular view type we are using, for cases where we have
 		multiple view types
 	\end{enumerate}
-	\item onBindViewHolder()
+	\item \lstinline!onBindViewHolder()!
 	is responsible for updating a ViewHolder based upon the
 	model data for a certain position .
 \end{enumerate}
 
+
+\lstinputlisting[firstline=43,lastline=64,language=kotlin, caption={The definitions of the methods for a RecyclerView.adapter}, label=code:rec1]{srccode/recyclerview/recycle.kt}
+
 \subsection{ViewHolder}
-The RecyclerView.ViewHolder is responsible for binding data as needed from our
-model into the widgets for a row in our list. However, other than needing to use the base class of RecyclerView.ViewHolder ,
+The \lstinline!RecyclerView.ViewHolder! is responsible for binding data as needed from our
+model into the widgets for a row in our list. However, other than needing to use the base class of \lstinline!RecyclerView.ViewHolder! ,
 there is no other particular protocol that is mandated between the adapter and the
 view holder. You can invent your own API.
 
-This solution avoids all the findViewById() method calls in the adapter to find the views to be filled with data.
+\lstinputlisting[firstline=71,lastline=77,language=kotlin, caption={The ViewHolder definition.}, label=code:rec1]{srccode/recyclerview/recycle.kt}
+
 
 \subsection{LayoutManagers}
-After adding a recyclerview to the activity, the first thing we do is call setLayoutManager() ,
-which will associate a RecyclerView.LayoutManager with our RecyclerView, for example a LinearLayoutManager. RecyclerView
+After adding a \lstinline!RecyclerView! to the \lstinline!Activity!, the first thing we do is call \lstinline!setLayoutManager()! ,
+which will associate a \lstinline!RecyclerView.LayoutManager! with our \lstinline!RecyclerView!, for example a \lstinline!LinearLayoutManager!. \lstinline!RecyclerView!
 knows absolutely nothing about how to lay out its children. That work is delegated
-to a RecyclerView.LayoutManager , so that different approaches can be plugged in as
+to a \lstinline!RecyclerView.LayoutManager!, so that different approaches can be plugged in as
 needed.
 
-There are three concrete subclasses of the abstract RecyclerView.LayoutManager
-base class that ship with recyclerview-v7 :
+There are three concrete subclasses of the abstract \lstinline!RecyclerView.LayoutManager!
+base class that ship with \lstinline!recyclerview-v7! :
 \begin{enumerate}
-	\item LinearLayoutManager , which implements a vertically-scrolling list
-	\item GridLayoutManager ,
+	\item \lstinline!LinearLayoutManager! , which implements a vertically-scrolling list
+	\item \lstinline!GridLayoutManager! ,
 	which implements a two-dimensional vertically-
 	scrolling list
-	\item StaggeredGridLayoutManager , which implements a “staggered grid”, which
-	has columns of cells like a GridView , but where the cells do not have to all
+	\item \lstinline!StaggeredGridLayoutManager! , which implements a staggered grid, which
+	has columns of cells like a \lstinline!GridView! , but where the cells do not have to all
 	have the same size.
 \end{enumerate}
 
+In our example we have defined the LayoutManager in the XML. This is not a best practise and will be changed in the next iteration of this course. 
 
 \subsection{ItemAnimator}
-RecyclerView.ItemAnimator is a class that defines the animations performed on items and will animate ViewGroup changes such as add/delete/select notified to the adapter. DefaultItemAnimator is a basic animation available by default with the RecyclerView.
+\lstinline!RecyclerView.ItemAnimator! is a class that defines the animations performed on items and will animate \lstinline!ViewGroup! changes such as add/delete/select notified to the adapter. DefaultItemAnimator is a basic animation available by default with the RecyclerView.
 
 To customize the DefaultItemAnimator add an item animator to the RecyclerView. 
 
 
-\subsection{Responding to Clicks}
-Even though displaying elements in RecyclerView is better, in terms of performance, than its predecessors, ListView and GridView, it is not simple to add a clicklistener. 
+\section{Responding to Clicks}
+Even though displaying elements in \lstinline|RecyclerView| is better, in terms of performance, than its predecessors,  \lstinline|ListView |and  \lstinline|GridView|, it is not simple to add a clicklistener. 
 
-To overcome this problem create an Interface
+In previous version of Android, mainly where we used Java, we had to create interfaces -, implement them and assign them to the adapter. With the knowledge of function parameters and lambda expressions in Kotlin hower, we can start adding a click handler to our RecyclerView in a more elegant way.
 
-\begin{android}
-public interface RecyclerViewItemClickListener {
-	public void onClick(View view, int position);
-	
-	public void onLongClick(View view, int position);
-}
-\end{android}
-To detect the item of the RecyclerView which is clicked we need a helper class.
+Android has defined an Interface, which is part of the \lstinline|View|  class: \lstinline|View.OnClickListener|. It only contains one methode, namely \lstinline|onClick(View v)| which is called whenever a view has been clicked.
 
-\begin{android}
-public class CustomRVItemTouchListener implements RecyclerView.OnItemTouchListener {
-	
-	//GestureDetector to intercept touch events
-	GestureDetector gestureDetector;
-	private RecyclerViewItemClickListener clickListener;
-	
-	public CustomRVItemTouchListener(Context context, final RecyclerView recyclerView, final RecyclerViewItemClickListener clickListener) {
-		this.clickListener = clickListener;
-		gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
-			
-			@Override
-			public boolean onSingleTapUp(MotionEvent e) {
-				return true;
-			}
-			
-			@Override
-			public void onLongPress(MotionEvent e) {
-				//find the long pressed view
-				View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
-				if (child != null && clickListener != null) {
-					clickListener.onLongClick(child, recyclerView.getChildLayoutPosition(child));
-				}
-			}
-		});
-	}
-	
-	@Override
-	public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent e) {
-		
-		View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
-		if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
-			clickListener.onClick(child, recyclerView.getChildLayoutPosition(child));
-		}
-		return false;
-	}
-	
-	@Override
-	public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-		
-	}
-	
-	@Override
-	public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-		
-	}
-}
-\end{android}
+\subsection*{Extend the Adapter}
+We  need a new  parameter in the definition of our Adapter: the click listener function which we will define as a  function parameter. The clickListener parameter is a val, meaning that it’s constant in our Adapter. It does not need a new function paramter, as every view has a tag (\lstinline|View.tag|) that can be used to store data related to that view. 
 
-Basically what this class does is, detect the RecyclerView element under the (X, Y) position where the screen was clicked. This class is helpful for both click types created by the interface.
+The documentation states: \textit{Tags are essentially an extra piece of information that can be associated with a view. They are most often used as a convenience to store data related to views in the views themselves rather than by putting them in a separate structure.}
 
+In our case, each item in the \lstinline|RecyclerView| keeps a reference to the comic it represents which  allows us to reuse a single listener for all comics in the list.
+
+\lstinputlisting[firstline=5,lastline=13,language=kotlin, caption={Extending the Adapter}, label=code:rec1]{srccode/recyclerview/recycle.kt}	
+
+\subsection*{Implementing the ViewHolder \& ClickListener}
+We want the individual items in the list to handle click events. These items are managed by the \lstinline|ViewHolder|. In our example, we called the view holder: \lstinline|ViewHolder|. Whenever the \lstinline|RecyclerView| assigns (new) content to the item, our Adapter calls \lstinline|bind()| of the specific \lstinline|ViewHolder| responsible for the item view.
+
+Therefore, \lstinline|bind()| is the logical place to also ensure the item sends back the correct item data whenever it iss clicked. We add a second parameter to the  \lstinline|bind()| function: a function parameter for the click listener.
+
+\lstinputlisting[firstline=52,lastline=64,language=kotlin, caption={Binding the ViewHolder}, label=code:rec1]{srccode/recyclerview/recycle.kt}
+
+\subsection*{Handle the click events}
+The Adapter and the \lstinline|ViewHolder| are ready to process click events. The last step is to handle clicks. We need to implement this functionality in the  \lstinline|init| part of the class because the primary constructor cannot contain any code. Initialization code can be placed in initializer blocks, which are prefixed with the \lstinline|init| keyword.
+
+What you can see in the code is that the onClickListener is implemented using a functional type. 
+
+\lstinputlisting[firstline=16,lastline=41,language=kotlin, caption={The ViewHolder definition.}, label=code:rec1]{srccode/recyclerview/recycle.kt}
 
 \section{CardView}
-Cards are a popular visual metaphor in mobile development. Dividing content collections (or aspects of a larger piece of content) into cards makes it clearer how you can reorganize that content to fit various screen sizes and orientations. In some cases, you might have a single column of cards, while in other cases, you have cards
+\lstinline!Cards! are a popular visual metaphor in mobile development. Dividing content collections (or aspects of a larger piece of content) into cards makes it clearer how you can reorganize that content to fit various screen sizes and orientations. In some cases, you might have a single column of cards, while in other cases, you have cards
 arranged more laterally.
 
 In 2014, Google released cardview-v7 , another library in the Android Support
@@ -176,20 +157,8 @@ Android Support repository
 \section{Example}
 
 \begin{example}
-	In the repository found here \cite{Buysse2017}, we find an example demonstrating the principles explained above. Moreover, it makes use of a Fragment with a Recyclerview. It uses Butterknife as already demonstrated in previous example. For loading the images it makes use of the Picasso library (see \cite{Square2017}). 
+	In the repository found here \cite{Buysse2017}, we find an example demonstrating the principles explained above. Moreover, it makes use of a Fragment with a Recyclerview. It uses Butterknife as already demonstrated in previous example. For loading the images it makes use of the Picasso library (see \cite{Square2017}). This example is from previous year, where Java was still used. 
 \end{example}
 
-\newpage
-\section{Exercise}
-\begin{exercise}
-	Interview some of your classmates: ask their traits which describe them best. After the interview, make a nice picture (after asking permission of course).
-	
-	With this information in place, you should implement the following game: Guess who! If you don't know the game, see \cite{WikiHow2017}.
-	
-	The game should be able to be played in portrait and in landscape mode.
-	Portrait mode should only contain a recyclerview with a small description of the student. The student should be able to be swiped out (i.e. he does not meet de traits). Pressing a student should show a new fragment with the student's description.
-	Landscape mode should contain the list plus the description of the student. Swiping again deletes the student and the corresponding detailfragment.
-	You should be able to restart the game.
-	Make sure you apply the give best practices and try to animate as much as possible!
-\end{exercise}
+
 

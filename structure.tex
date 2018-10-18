@@ -574,32 +574,7 @@ addtohook={%
 %----------------------------------------------------------------------------------------
 \usepackage{listings}
 
-\lstset{ %
-  language=Java,                     % the language of the code
-  inputencoding=utf8,             % Allow (some) Unicode characters in the code
-  extendedchars=true,
-  literate={é}{{\'e}}1 {ë}{{\"e}}1 {è}{{\`e}}1 {á}{{\'a}}1 {à}{{\`a}}1 {ó}{{\'o}}1 {ò}{{\`o}}1 {²}{{$^2$}}1 {€}{{\euro}}1,
-  basicstyle=\normalsize,       % the size of the fonts that are used for the code
-  numbers=left,                   % where to put the line-numbers
-  numberstyle=\tiny\color{gray},  % the style that is used for the line-numbers
-  stepnumber=1,                   % the step between two line-numbers. If it's 1, each line
-  % will be numbered
-  numbersep=5pt,                  % how far the line-numbers are from the code
-  backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
-  showspaces=false,               % show spaces adding particular underscores
-  showstringspaces=false,         % underline spaces within strings
-  showtabs=false,                 % show tabs within strings adding particular underscores
-  frame=single,                   % adds a frame around the code
-  rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. commens (green here))
-  tabsize=2,                      % sets default tabsize to 2 spaces
-  captionpos=b,                   % sets the caption-position to bottom
-  breaklines=true,                % sets automatic line breaking
-  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
-  keywordstyle=\color{HoGentBlue},      % keyword style
-  commentstyle=\color{HoGentGrey},   % comment style
-  stringstyle=\color{HoGentRed},      % string literal style
-  morekeywords={*,...}            % if you want to add more keywords to the set
-}
+
 
 
 \lstnewenvironment{android}
@@ -626,7 +601,7 @@ breakatwhitespace=false,        % sets if automatic breaks should only happen at
 {}
 
 \lstdefinelanguage{Kotlin}{
-	keywords={package, as, as?, typealias, this, super, val, var, fun, for, null, true, false, is, in, throw, return, break, continue, object, if, try, else, while, do, when, class, interface, enum, object, companion, override, public, private, get, set, import, abstract, vararg, expect, actual, where, suspend, data, internal, dynamic, final, by},
+	keywords={package, as, as?, typealias, this, super, val, var, fun, for, null, true, false, is, in, throw, return, break, continue, object, if, try, else, while, do, when, class, interface, enum, object, companion, override, public, private, get, set, import, abstract, vararg, expect, actual, where, suspend, data, internal, dynamic, final, by, init, R, return},
 	keywordstyle=\color{HoGentBlue}\bfseries,
 	ndkeywords={@Deprecated, @JvmName, @JvmStatic, @JvmOverloads, @JvmField, @JvmSynthetic, Iterable, Int, Long, Integer, Short, Byte, Float, Double, String, Runnable, Array},
 	ndkeywordstyle=\color{HoGentBlue}\bfseries,
@@ -640,7 +615,24 @@ breakatwhitespace=false,        % sets if automatic breaks should only happen at
 	stringstyle=\color{HoGentAccent3}\ttfamily,
 	morestring=[b]",
 	morestring=[s]{"""*}{*"""},
+	basicstyle=\ttfamily,
+	tabsize=2,
+	extendedchars=true,
+	breaklines=true,
+	frame=b,
+	showspaces=false,
+	showtabs=false,
+	xleftmargin=17pt,
+	framexleftmargin=17pt,
+	framexrightmargin=5pt,
+	framexbottommargin=4pt,
+	showstringspaces=false
 }
+
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{HoGentBlue}{\parbox{\textwidth}{\hspace{15pt}#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf}}
 
 \lstdefinelanguage{kxml}{
 	keywords={android:},
@@ -658,6 +650,8 @@ breakatwhitespace=false,        % sets if automatic breaks should only happen at
 	morestring=[b]",
 	morestring=[s]{"""*}{*"""},
 }
+
+
 
 
 \lstnewenvironment{kotlin}
