@@ -43,7 +43,7 @@ A short example of this can be seen in listing \ref{code:basicMVC}.
 caption={A very simple application with a TextView, an EditText and a Button.
 	After pressing the button, the text in the TextView is updated with the user's input in the EditText.
 	Saving and Restoring UI state is done using the onSaveInstanceState method.},
-label=code:basicMVC]{srccode/mvvm/MVC_example/app/src/main/java/be/hogent/nativeapps/mvc_example/MainActivity.kt}
+label=code:basicMVC]{srccode/mvvm/MVC_simple/app/src/main/java/be/hogent/nativeapps/mvc_example/MainActivity.kt}
 
 There is however another solution: using a ViewModel class.
 This class is part of the Android Lifecycle Architecture Components \cite{viewModelOfficial}.
@@ -78,12 +78,12 @@ Every part of the UI that gets date from the model can be held in the ViewModel.
 caption={A very simple application with a TextView, an EditText and a Button.
 	After pressing the button, the text in the TextView is updated with the user's input in the EditText.
 	Saving and Restoring UI state is done using a ViewModel.},
-label=code:viewModelActivity]{srccode/mvvm/ViewModel_simple_example/app/src/main/java/be/hogent/nativeapps/mvc_example/MainActivity.kt}
+label=code:viewModelActivity]{srccode/mvvm/ViewModel_simple/app/src/main/java/be/hogent/nativeapps/mvc_example/MainActivity.kt}
 
 \lstinputlisting[language=Kotlin,
 caption={The InputViewModel class that is used in listing \ref{code:viewModelActivity}.
 		It extends the abstract ViewModel class from the Android Architecture Components.},
-label=code:viewModelSimple]{srccode/mvvm/ViewModel_simple_example/app/src/main/java/be/hogent/nativeapps/mvc_example/InputViewModel.kt}
+label=code:viewModelSimple]{srccode/mvvm/ViewModel_simple/app/src/main/java/be/hogent/nativeapps/mvc_example/InputViewModel.kt}
 
 \subsection{ViewModel with Data Binding and LiveData as part of an MVVM architecture}
 \subsubsection{Binding the ViewModel to the View}
@@ -101,13 +101,13 @@ Listing \ref{code:dataBindingXMLvariable} illustrates this step.
 
 \lstinputlisting[language=XML, firstline=2,lastline=8,
 caption={The entire layout is wrapped by a <layout> tag, and a variable is defined to hold the ViewModel},
-label=code:dataBindingXMLvariable]{srccode/mvvm/ViewModel_databinding/app/src/main/res/layout/activity_main.xml}
+label=code:dataBindingXMLvariable]{srccode/mvvm/ViewModel_dataBinding/app/src/main/res/layout/activity_main.xml}
 
 UI components can then reference this variable when they require a piece of UI state, as shown in listing \ref{code:dataBindingXMLreference}.
 
 \lstinputlisting[language=XML, firstline=16,lastline=21,
 caption={XML attributes can reference the variable to fill their values.},
-label=code:dataBindingXMLreference]{srccode/mvvm/ViewModel_databinding/app/src/main/res/layout/activity_main.xml}
+label=code:dataBindingXMLreference]{srccode/mvvm/ViewModel_dataBinding/app/src/main/res/layout/activity_main.xml}
 
 \subsubsection{Automatically updating the UI on state changes}
 \todo{Add how LiveData will work together with Room, and ViewModel will interact with it}
@@ -124,7 +124,7 @@ This provides all lifecycle and observable functionality.
 
 \lstinputlisting[language=Kotlin,
 caption={Attributes in the ViewModel are wrapped inside LiveData objects. Sometimes some extra initialization code is needed.},
-label=code:dataBindingViewModel]{srccode/mvvm/ViewModel_databinding/app/src/main/java/be/hogent/nativeapps/mvc_example/InputViewModel.kt}
+label=code:dataBindingViewModel]{srccode/mvvm/ViewModel_dataBinding/app/src/main/java/be/hogent/nativeapps/mvc_example/InputViewModel.kt}
 
 In the Activity there are 3 things to do: asking for the binding with the layout file, binding the ViewModel to the layout and setting the LifeCycleOwner.
 We need the binding to link fill in the variables defined in the layout file. 
@@ -135,6 +135,6 @@ All three steps are illustrated in listing \ref{code:dataBindingActivity}.
 
 \lstinputlisting[language=Kotlin,firstline=14, lastline=31,
 caption={Attributes in the ViewModel are wrapped inside LiveData objects. Sometimes some extra initialization code is needed.},
-label=code:dataBindingActivity]{srccode/mvvm/ViewModel_databinding/app/src/main/java/be/hogent/nativeapps/mvc_example/MainActivity.kt}
+label=code:dataBindingActivity]{srccode/mvvm/ViewModel_dataBinding/app/src/main/java/be/hogent/nativeapps/mvc_example/MainActivity.kt}
 
 \subsection{ViewModel as a way for fragments to share data}
