@@ -10,9 +10,9 @@
 MVC is one of the more common architectural software patterns.
 It divides your code into three interconnected parts \cite{mvc-mvp-mvv-on-android}: 
 \begin{description}
-	\item[Model :] the central data and state of the application, together with the business logic.
-	\item[View :] the representation of the model. Its responsibility is to render the UI.
-	\item[Controller :] acts as an agent between the model and the view. 
+	\item[Model:] the central data and state of the application, together with the business logic.
+	\item[View:] the representation of the model. Its responsibility is to render the UI.
+	\item[Controller:] acts as an agent between the model and the view. 
 		When the view receives user input, the controller will interact with the model to attain the desired effects.
 \end{description}
 
@@ -41,7 +41,8 @@ There the \lstinline!onSaveInstanceState! and \lstinline!onCreate! methods were 
 A short example of this can be seen in listing \ref{code:basicMVC}.
 
 \lstinputlisting[language=Kotlin, 
-caption={A simple application with a \lstinline!TextView!, an \lstinline!EditText! and a \lstinline!Button!. After pressing the button, the text in the \lstinline!TextView! is updated with the user's input in the \lstinline!EditText!.
+caption={A simple application with a \lstinline!TextView!, an \lstinline!EditText! and a \lstinline!Button!.
+	After pressing the button, the text in the \lstinline!TextView! is updated with the user's input in the \lstinline!EditText!.
 	Saving and Restoring UI state is done using the \lstinline!onSaveInstanceState! method.},
 label=code:basicMVC]{srccode/mvvm/MVC_simple/app/src/main/java/be/hogent/nativeapps/mvc_example/MainActivity.kt}
 
@@ -90,7 +91,7 @@ label=code:viewModelActivity]{srccode/mvvm/ViewModel_simple/app/src/main/java/be
 
 \lstinputlisting[language=Kotlin,
 caption={The InputViewModel class that is used in listing \ref{code:viewModelActivity}.
-		It extends the abstract ViewModel class from the Android Architecture Components.},
+	It extends the abstract ViewModel class from the Android Architecture Components.},
 label=code:viewModelSimple]{srccode/mvvm/ViewModel_simple/app/src/main/java/be/hogent/nativeapps/mvc_example/InputViewModel.kt}
 
 \subsection{ViewModel with Data Binding and LiveData as part of an MVVM architecture}
