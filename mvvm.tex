@@ -8,76 +8,84 @@
 
 \section{MVC}
 MVC is one of the more common architectural software patterns.
-It divides your code into three interconnected parts\cite{mvc-mvp-mvv-on-android}: 
+It divides your code into three interconnected parts \cite{mvc-mvp-mvv-on-android}: 
 \begin{description}
-	\item[Model] the central data and state of the application, together with the business logic.
-	\item[View] the representation of the model. Its responsibility is to render the UI.
-	\item[Controller] acts as an agent between the model and the view. 
+	\item[Model :] the central data and state of the application, together with the business logic.
+	\item[View :] the representation of the model. Its responsibility is to render the UI.
+	\item[Controller :] acts as an agent between the model and the view. 
 		When the view receives user input, the controller will interact with the model to attain the desired effects.
 \end{description}
 
 \todo{Add picture}
-MVC as does a decent job of separating the model and view.
+MVC does a decent job of separating the model and view.
 Model classes can be (unit) tested easily as there are no dependencies that need to be mocked.
-The Controller (Activities and Fragments in Android) are harder to test as they are so tightly coupled to the views.
+The Controller (\lstinline!Activities! and \lstinline!Fragments! in Android) are harder to test as they are  tightly coupled to the views.
 Testing these means mocking all these views. 
-Changes in the View also quickly propagate into the Controller classes, resulting in more work.
+Changes in the View also quickly propagate into the controller classes, resulting in more work.
 
 This might all be fine in small applications, but as the codebase grows, so does the impact of these downsides.
 Luckily, there is a better way to organize your code: through an architectural pattern such as MVP or MVVM.
+
 Both are quite popular in the Android community, as both have their uses.
-In this course we chose to go deeper into MVVM, as many of the recently released architecture components \todo{ref} synergize well with this pattern.
+In this course we chose to go deeper into MVVM, as many of the recently released architecture components \todo{ref} work well with this pattern.
 
 \section{MVVM}
 In this section we explore the MVVM architecture step-by-step. 
-We starts by looking at the concept of a ViewModel class, and how it helps us with the issue of configuration changes.
-After that has been made clear, we use this ViewModel class to be part of an MVVM architecture. 
-Lastly we look at another use case for the ViewModel class: a way to allow 
+We start by looking at the concept of a \lstinline!ViewModel! class, and how it helps us with the issue of configuration changes.
+After that has been made clear, we use this \lstinline!ViewModel! class to be part of an MVVM architecture. 
+Lastly we look at another use case for the \lstinline!ViewModel! class: a way to allow \todo{continue sentence}
 
 \subsection{ViewModel as a way to survive configuration changes}
-We've discussed the problem of saving and restoring state already in section \ref{sec:saveAndRestoreState}. 
-There the onSaveInstanceState and onCreate methods were proposed as a solution.
+We have discussed the problem of saving and restoring state already in section \ref{sec:saveAndRestoreState}. 
+There the \lstinline!onSaveInstanceState! and \lstinline!onCreate! methods were proposed as a solution.
 A short example of this can be seen in listing \ref{code:basicMVC}.
 
 \lstinputlisting[language=Kotlin, 
-caption={A very simple application with a TextView, an EditText and a Button.
-	After pressing the button, the text in the TextView is updated with the user's input in the EditText.
-	Saving and Restoring UI state is done using the onSaveInstanceState method.},
+caption={A simple application with a \lstinline!TextView!, an \lstinline!EditText! and a \lstinline!Button!. After pressing the button, the text in the \lstinline!TextView! is updated with the user's input in the \lstinline!EditText!.
+	Saving and Restoring UI state is done using the \lstinline!onSaveInstanceState! method.},
 label=code:basicMVC]{srccode/mvvm/MVC_simple/app/src/main/java/be/hogent/nativeapps/mvc_example/MainActivity.kt}
 
-There is however another solution: using a ViewModel class.
+However, there is another solution: using a \lstinline!ViewModel! class.
 This class is part of the Android Lifecycle Architecture Components \cite{viewModelOfficial}.
-While the concept of a viewmodel isn't specific to Android, this implementation is of particular interest to us because it ties in to the Activity lifecycle.
+While the concept of a viewmodel isn't specific to Android, this implementation is of particular interest to us because it ties in to the \lstinline!Activity! lifecycle.
 
 A generic viewmodel class is used as part of an MVVM architecture (more on that later), and its job is to capture all of the elements of the UI that expose some state of the model.
-This reduces the size and complexity of what would normally be the controller.
-In our case, it's exactly those pieces of data that we normally lose during configuration changes.
-We could make that generic viewmodel class Serializable and use onSaveInstanceState and onCreate to save and restore it, but there is an easier way. 
 
-The ViewModel class that is a part of the Android Architecture Components isn't one that you create yourself using a regular constructor, but by using a ViewModelProvider\cite{viewModelProvider}.
-In the onCreate function of your Fragment or Activity you use the following line of code to instantiate your ViewModel.
+This reduces the size and complexity of what would normally be the controller.
+In our case, it is exactly those pieces of data that we normally lose during configuration changes.
+We could make that generic viewmodel class \lstinline!Serializable! and use \lstinline!onSaveInstanceState! and \lstinline!onCreate! to save and restore it, but there is an easier way. 
+
+The ViewModel class that is a part of the Android Architecture Components isn't one that you create yourself using a regular constructor, but by using a \lstinline!ViewModelProvider! \cite{viewModelProvider}.
+In the \lstinline!onCreate! function of your \lstinline!Fragment! or \lstinline!Activity! you use the following line of code to instantiate your \lstinline!ViewModel!.
+
+
 \begin{android}
 	val model = ViewModelProviders.of(this).get(MyViewModel::class.java)	
 \end{android}
+
 To use this library it has to be added as a dependency of your application.
 This means the following line has to be added to your app module's gradle file:
+
 \begin{android}
 	    implementation "android.arch.lifecycle:extensions:1.1.1"
 \end{android}
 
-The \textit{this} refers to the Activity itself, and links the ViewModel to the Activity's lifecycle.
-ViewModelProviders keeps a list of all active ViewModels and their associated lifecycles. 
-When a configuration change occurs, the ViewModelProvider still has a reference to the created ViewModel and can just return it.
-This alleviates the need for onSaveInstanceState. 
+The \lstinline!this! refers to the \lstinline!Activity! itself, and links the \lstinline!ViewModel! to the \lstinline!Activity's! lifecycle.
 
-An example implementation can be seen in \ref{code:viewModelActivity} (the Activity class) and \ref{code:viewModelSimple} (the ViewModel class).
-In more realistic applications the ViewModel would hold much more than just one piece of UI information.
-Every part of the UI that gets date from the model can be held in the ViewModel.
+\lstinline!ViewModelProviders! keeps a list of all active \lstinline!ViewModels! and their associated lifecycles. 
+
+When a configuration change occurs, the \lstinline!ViewModelProvider! still has a reference to the created \lstinline!ViewModel! and can just return it.
+This alleviates the need for \lstinline!onSaveInstanceState! for configuration change state changes. 
+
+An example implementation can be seen in \ref{code:viewModelActivity} (the \lstinline!Activity! class) and \ref{code:viewModelSimple} (the \lstinline!ViewModel! class).
+In more realistic applications the \lstinline!ViewModel! would hold much more than just one piece of UI information.
+
+Every part of the UI that gets data from the model should be retained in the \lstinline!ViewModel!.
 
 \lstinputlisting[language=Kotlin,
-caption={A very simple application with a TextView, an EditText and a Button.
-	After pressing the button, the text in the TextView is updated with the user's input in the EditText.
-	Saving and Restoring UI state is done using a ViewModel.},
+caption={A very simple application with a \lstinline!TextView!, an \lstinline!EditText! and a \lstinline!Button!.
+	After pressing the button, the text in the \lstinline!TextView! is updated with the user's input in the \lstinline!EditText!.
+	Saving and Restoring UI state is done using a \lstinline!ViewModel!.},
 label=code:viewModelActivity]{srccode/mvvm/ViewModel_simple/app/src/main/java/be/hogent/nativeapps/mvc_example/MainActivity.kt}
 
 \lstinputlisting[language=Kotlin,
@@ -87,13 +95,17 @@ label=code:viewModelSimple]{srccode/mvvm/ViewModel_simple/app/src/main/java/be/h
 
 \subsection{ViewModel with Data Binding and LiveData as part of an MVVM architecture}
 \subsubsection{Binding the ViewModel to the View}
-Extracting the UI state from the Activity as done in the previous section is the first step towards a full MVVM architecture.
+
+Extracting the UI state from the \lstinline!Activity! as done in the previous section is the first step towards a full MVVM architecture.
+
 \todo{Add image}
-For that we also need to link the ViewModel directly to the View.
-This is done using the Data Binding library\cite{dataBinding}.
-It allows you to add a link to a ViewModel (or other model classes) directly into your layout files.
-Any UI component that needs a piece of data from the ViewModel can request it directly from the ViewModel.
-This reduces the role of the Activity even more: it is no longer responsible for updating the view.
+
+We need to link the \lstinline!ViewModel! directly to the View.
+This is done using the Data Binding library \cite{dataBinding}.
+It allows you to add a link to a \lstinline!ViewModel! (or other model classes) directly into your layout files.
+
+Any UI component that needs a piece of data from the \lstinline!ViewMode!l can request it directly from the \lstinline!ViewModel!.
+This reduces the role of the \lstinline!Activity! even more: it is no longer responsible for updating the \lstinline!View!.
 
 The first step is transforming the normal layout into one that supports data binding.
 This involves creating a variable in the layout file that will hold a reference to the ViewModel.
@@ -111,30 +123,35 @@ label=code:dataBindingXMLreference]{srccode/mvvm/ViewModel_DataBinding_LiveData/
 
 \subsubsection{Automatically updating the UI on state changes}
 \todo{Add how LiveData will work together with Room, and ViewModel will interact with it}
-The matter of updating state of the UI when a user interacts with it can be solved using the LiveData Architecture Component\cite{liveData}.
-A LiveData object is an observable object.
-This means that other objects can first register and subsequently listen to changes in the value of that object.
-This functionality alone could also be provided using Observable objects\cite{observable}.
-LiveData however has much more to offer: it is completely linked with the listener's lifecycle.
-This means no problems during configuration changes, no memory leaks, no updates send to inactive (and possibly destroyed)listeners resulting in crashes,\ldots
+The matter of updating state of the UI when a user interacts with it can be solved using the LiveData Architecture Component \cite{liveData}.
 
-Using LiveData means making minor changes to both the ViewModel and the Activity, as seen in listing \ref{code:dataBindingViewModel}
-In the ViewModel the attributes are new wrapped inside LiveData objects.
+A LiveData object is an observable object. This means that other objects can first register and subsequently listen to changes in the value of that object.
+This functionality alone could also be provided using Observable objects\cite{observable}.
+LiveData however has much more to offer: it is completely linked with the listener's lifecycle. This means no problems during configuration changes, no memory leaks, no updates send to inactive (and possibly destroyed) listeners resulting in crashes \ldots
+
+Using LiveData means making minor changes to both the \lstinline!ViewModel! and the \lstinline!Activity!, as seen in listing \ref{code:dataBindingViewModel}
+
+In the \lstinline!ViewModel! the attributes are now wrapped inside \lstinline!LiveData! objects.
 This provides all lifecycle and observable functionality. 
 
 \lstinputlisting[language=Kotlin,
-caption={Attributes in the ViewModel are wrapped inside LiveData objects. Sometimes some extra initialization code is needed.},
+caption={Attributes in the \lstinline!ViewModel! are wrapped inside \lstinline!LiveData! objects. Sometimes some extra initialization code is needed.},
 label=code:dataBindingViewModel]{srccode/mvvm/ViewModel_DataBinding_LiveData/app/src/main/java/be/hogent/nativeapps/mvc_example/InputViewModel.kt}
 
-In the Activity there are 3 things to do: asking for the binding with the layout file, binding the ViewModel to the layout and setting the LifeCycleOwner.
+In the \lstinline!Activity! there are 3 things to do:
+\begin{inparaenum}[(i)]
+	\item ask for the binding with the layout file,
+	\item binding the \lstinline!ViewModel! to the layout and
+	\item setting the \lstinline!LifeCycleOwner!.
+\end{inparaenum}
+
 We need the binding to link fill in the variables defined in the layout file. 
-Setting the LifeCycleOwner is needed when using LiveData. 
-Without this step the LiveData objects can't know when their listeners are active or not.
-All three steps are illustrated in listing \ref{code:dataBindingActivity}.
+Setting the \lstinline!LifeCycleOwner! is needed when using \lstinline!LiveData!. 
+Without this step the LiveData objects can't know when their listeners are active or not. All three steps are illustrated in listing \ref{code:dataBindingActivity}.
 
 
 \lstinputlisting[language=Kotlin,firstline=14, lastline=31,
-caption={Attributes in the ViewModel are wrapped inside LiveData objects. Sometimes some extra initialization code is needed.},
+caption={Attributes in the \lstinline!ViewModel! are wrapped inside \lstinline!LiveData! objects. Sometimes some extra initialization code is needed.},
 label=code:dataBindingActivity]{srccode/mvvm/ViewModel_DataBinding_LiveData/app/src/main/java/be/hogent/nativeapps/mvc_example/MainActivity.kt}
 
 \subsection{ViewModel as a way for fragments to share data}
