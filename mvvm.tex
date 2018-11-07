@@ -52,7 +52,7 @@ Normally MVC is a good way to architect your application, but in Android specifi
 	\caption{A diagram illustrating the MVC architecture in Android. From \cite{simform}.}
 \end{figure}
 
-Luckily, there are a better way to organize your code: through architectural patterns such as MVVM, MVI, MVP \ldots
+Luckily, there is a better way to organize your code: through architectural patterns such as MVVM, MVI, MVP \ldots
 
 All have gained some popularity in the Android community, but the recently released architecture components \cite{architectureComponents} focus quite heavily on MVVM.
 In this course we will make much use of these components and as such use MVVM as our architecture of choice.
@@ -61,7 +61,8 @@ In this course we will make much use of these components and as such use MVVM as
 In this section we explore the MVVM architecture step-by-step. 
 We start by looking at the concept of a \lstinline!ViewModel! class, and how it helps us with the issue of configuration changes.
 After that has been made clear, we use this \lstinline!ViewModel! class to be part of an MVVM architecture. 
-% TODO Lastly we look at another use case for the \lstinline!ViewModel! class: a way to allow \todo{continue sentence}
+Lastly we look at another use case for the \lstinline!ViewModel! class: a way to allow our UI to update automatically once the model changes. 
+This will be done using by binding the data from the \lstinline!ViewModel! to the layoutfile.
 
 \subsection{ViewModel as a way to survive configuration changes}
 We have discussed the problem of saving and restoring state already in section \ref{sec:saveAndRestoreState}. 
@@ -199,7 +200,7 @@ In the \lstinline!Activity! there are 3 things to do:
 	\item setting the \lstinline!LifeCycleOwner!.
 \end{inparaenum}
 
-We need the binding to link in the variables defined in the layout file. 
+We need the binding to set up the link with the variables defined in the layout file. 
 Setting the \lstinline!LifeCycleOwner! is needed when using \lstinline!LiveData!. 
 Without this step the LiveData objects can't know when their listeners are active or not. All three steps are illustrated in listing \ref{code:dataBindingActivity}.
 
