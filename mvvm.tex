@@ -37,7 +37,7 @@ Figure \ref{fig:MVCdiagram} illustrates the role of standard Android Components 
 Normally MVC is a good way to architect your application, but in Android specifically there are some issues:
 
 \begin{enumerate}
-	\item Unit Testing the \lstinline!Activities! and \lstinline!Fragments! is extremely difficult because they are so tied in to the Android Framework.
+	\item Unit tTesting the \lstinline!Activities! and \lstinline!Fragments! is extremely difficult because they are so tied in to the Android Framework.
 	``God'' objects such as Context and the \lstinline!Activity! life cycle all stand in the way of easy testing.
 	\item \lstinline!Activities! and \lstinline!Fragments! as controllers have many responsibilities. 
 	They have to keep the UI (View) up-to-date, interact with databases or remote API's, correctly implement the life cycle,\ldots
@@ -163,10 +163,16 @@ It allows you to add a link to a \lstinline!ViewModel! (or other model classes) 
 Any UI component that needs a piece of data from the \lstinline!ViewMode!l can request it directly from the \lstinline!ViewModel!.
 This reduces the role of the \lstinline!Activity! even more: it is no longer responsible for updating the \lstinline!View!.
 
-The first step is transforming the normal layout into one that supports data binding.
+The first step is enabling the use of data binding.
+This is done in the Gradle file, as seen in listing \ref{code:enableDataBinding}.
+\lstinputlisting[language=XML, firstline=23,lastline=25,
+caption={To use the data binding features, they first have to be enabled in the app's build.gradle file.},
+label=code:enableDataBinding]{srccode/mvvm/ViewModel_DataBinding_LiveData/app/build.gradle}
+
+
+The second step is transforming the normal layout into one that supports data binding.
 This involves creating a variable in the layout file that will hold a reference to the ViewModel.
 Listing \ref{code:dataBindingXMLvariable} illustrates this step.
-
 \lstinputlisting[language=XML, firstline=2,lastline=8,
 caption={The entire layout is wrapped by a <layout> tag, and a variable is defined to hold the ViewModel},
 label=code:dataBindingXMLvariable]{srccode/mvvm/ViewModel_DataBinding_LiveData/app/src/main/res/layout/activity_main.xml}
@@ -178,6 +184,7 @@ caption={XML attributes can reference the variable to fill their values.},
 label=code:dataBindingXMLreference]{srccode/mvvm/ViewModel_DataBinding_LiveData/app/src/main/res/layout/activity_main.xml}
 
 \subsubsection{Automatically updating the UI on state changes}
+%TODO: elaborate on two-way databinding
 The matter of updating the state of the UI when a user interacts with it can be solved using the LiveData Architecture Component \cite{liveData}.
 
 A LiveData object is an observable object. This means that other objects can first register and subsequently listen to changes in the value of that object.
