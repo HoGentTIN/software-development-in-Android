@@ -37,7 +37,7 @@ Figure \ref{fig:MVCdiagram} illustrates the role of standard Android Components 
 Normally MVC is a good way to architect your application, but in Android specifically there are some issues:
 
 \begin{enumerate}
-	\item Unit Testing the \lstinline!Activities! and \lstinline!Fragments! is extremely difficult because they are so tied in to the Android Framework.
+	\item Unit tTesting the \lstinline!Activities! and \lstinline!Fragments! is extremely difficult because they are so tied in to the Android Framework.
 	``God'' objects such as Context and the \lstinline!Activity! life cycle all stand in the way of easy testing.
 	\item \lstinline!Activities! and \lstinline!Fragments! as controllers have many responsibilities. 
 	They have to keep the UI (View) up-to-date, interact with databases or remote API's, correctly implement the life cycle,\ldots
@@ -52,7 +52,7 @@ Normally MVC is a good way to architect your application, but in Android specifi
 	\caption{A diagram illustrating the MVC architecture in Android. From \cite{simform}.}
 \end{figure}
 
-Luckily, there are a better way to organize your code: through architectural patterns such as MVVM, MVI, MVP \ldots
+Luckily, there is a better way to organize your code: through architectural patterns such as MVVM, MVI, MVP \ldots
 
 All have gained some popularity in the Android community, but the recently released architecture components \cite{architectureComponents} focus quite heavily on MVVM.
 In this course we will make much use of these components and as such use MVVM as our architecture of choice.
@@ -61,7 +61,8 @@ In this course we will make much use of these components and as such use MVVM as
 In this section we explore the MVVM architecture step-by-step. 
 We start by looking at the concept of a \lstinline!ViewModel! class, and how it helps us with the issue of configuration changes.
 After that has been made clear, we use this \lstinline!ViewModel! class to be part of an MVVM architecture. 
-% TODO Lastly we look at another use case for the \lstinline!ViewModel! class: a way to allow \todo{continue sentence}
+Lastly we look at another use case for the \lstinline!ViewModel! class: a way to allow our UI to update automatically once the model changes. 
+This will be done using by binding the data from the \lstinline!ViewModel! to the layoutfile.
 
 \subsection{ViewModel as a way to survive configuration changes}
 We have discussed the problem of saving and restoring state already in section \ref{sec:saveAndRestoreState}. 
@@ -162,10 +163,16 @@ It allows you to add a link to a \lstinline!ViewModel! (or other model classes) 
 Any UI component that needs a piece of data from the \lstinline!ViewMode!l can request it directly from the \lstinline!ViewModel!.
 This reduces the role of the \lstinline!Activity! even more: it is no longer responsible for updating the \lstinline!View!.
 
-The first step is transforming the normal layout into one that supports data binding.
+The first step is enabling the use of data binding.
+This is done in the Gradle file, as seen in listing \ref{code:enableDataBinding}.
+\lstinputlisting[language=XML, firstline=23,lastline=25,
+caption={To use the data binding features, they first have to be enabled in the app's build.gradle file.},
+label=code:enableDataBinding]{srccode/mvvm/ViewModel_DataBinding_LiveData/app/build.gradle}
+
+
+The second step is transforming the normal layout into one that supports data binding.
 This involves creating a variable in the layout file that will hold a reference to the ViewModel.
 Listing \ref{code:dataBindingXMLvariable} illustrates this step.
-
 \lstinputlisting[language=XML, firstline=2,lastline=8,
 caption={The entire layout is wrapped by a <layout> tag, and a variable is defined to hold the ViewModel},
 label=code:dataBindingXMLvariable]{srccode/mvvm/ViewModel_DataBinding_LiveData/app/src/main/res/layout/activity_main.xml}
@@ -177,6 +184,7 @@ caption={XML attributes can reference the variable to fill their values.},
 label=code:dataBindingXMLreference]{srccode/mvvm/ViewModel_DataBinding_LiveData/app/src/main/res/layout/activity_main.xml}
 
 \subsubsection{Automatically updating the UI on state changes}
+%TODO: elaborate on two-way databinding
 The matter of updating the state of the UI when a user interacts with it can be solved using the LiveData Architecture Component \cite{liveData}.
 
 A LiveData object is an observable object. This means that other objects can first register and subsequently listen to changes in the value of that object.
@@ -199,7 +207,7 @@ In the \lstinline!Activity! there are 3 things to do:
 	\item setting the \lstinline!LifeCycleOwner!.
 \end{inparaenum}
 
-We need the binding to link in the variables defined in the layout file. 
+We need the binding to set up the link with the variables defined in the layout file. 
 Setting the \lstinline!LifeCycleOwner! is needed when using \lstinline!LiveData!. 
 Without this step the LiveData objects can't know when their listeners are active or not. All three steps are illustrated in listing \ref{code:dataBindingActivity}.
 
