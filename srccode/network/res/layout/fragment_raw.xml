@@ -1,0 +1,26 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+>
+
+
+    <ImageView
+        android:contentDescription="What does a METAR look like"
+        android:id="@+id/imageview_fragmentraw_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/metardescription" />
+
+    <TextView
+        android:id="@+id/rawmetar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/imageview_fragmentraw_description"
+        android:layout_marginTop="23dp"
+        android:ems="10"
+        android:text="@string/rewmetar" />
+</RelativeLayout>
+

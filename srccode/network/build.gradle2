@@ -1,0 +1,106 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'org.jetbrains.dokka-android'
+
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion versions.targetSdk
+
+    dataBinding {
+        enabled = true
+    }
+
+    defaultConfig {
+        applicationId "be.equality.metar"
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+    }
+    dokka {
+        outputFormat = 'html'
+        outputDirectory = "$buildDir/javadoc"
+    }
+}
+
+androidExtensions {
+    experimental = true
+}
+
+
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+
+
+    //Support packages
+    implementation "com.android.support:appcompat-v7:$versions.suport"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation "com.android.support:design:$versions.suport"
+    implementation "com.android.support:support-v4:$versions.suport"
+
+
+    //Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
+    implementation "com.squareup.retrofit2:converter-moshi:$versions.retrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit"
+
+
+    //OkHttp
+    implementation "com.squareup.okhttp3:okhttp:$versions.okHttp"
+    implementation "com.squareup.okhttp3:logging-interceptor:$versions.okHttp"
+
+    // LiveData & ViewModel
+    implementation "android.arch.lifecycle:extensions:$versions.architecture"
+
+    // Data binding
+    annotationProcessor "com.android.databinding:compiler:3.1.4"
+
+
+
+    // RxJava
+    implementation "io.reactivex.rxjava2:rxjava:$versions.rx"
+    implementation "io.reactivex.rxjava2:rxandroid:$versions.rxandroid"
+
+    implementation "com.squareup.moshi:moshi-kotlin:$versions.moshi"
+    //implementation "se.ansman.kotshi:api:$versions.kotshi"
+    //implementation "se.ansman.kotshi:compiler:$versions.kotshi"
+
+
+    // Adds libraries defining annotations to only the compile classpath.
+    implementation "com.google.dagger:dagger:$versions.dagger"
+    implementation "com.google.dagger:dagger-android-support:$versions.dagger"
+
+    // Adds the annotation processor dependency to the annotation processor classpath.
+    //Android Studio by default will not allow you to navigate to generated Dagger 2
+    // code as legitimate classes because they are not normally added to the source path.
+    // Adding the annotationProcessor plugin will add these files into the IDE classpath
+    // and enable you to have more visibility.
+    annotationProcessor "com.google.dagger:dagger-compiler:$versions.dagger"
+    kapt "com.google.dagger:dagger-compiler:$versions.dagger"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$versions.dagger"
+
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    //Logger functionality with beautifull logging : https://github.com/orhanobut/logger
+    implementation 'com.orhanobut:logger:2.2.0'
+}

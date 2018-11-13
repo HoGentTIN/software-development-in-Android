@@ -1,0 +1,53 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+
+
+buildscript {
+
+    ext.versions = [
+            'retrofit'      : '2.3.0',
+
+            'moshi'         : '1.7.0',
+            'kotshi'        : '1.0.5',
+            'picasso'       : '2.5.2',
+
+            'architecture'  : '1.1.1',
+            'dokka'         : '0.9.17',
+
+            'kotlin'        : '1.2.71',
+            'suport'        : '28.0.0',
+
+            "okHttp"        : '3.11.0',
+
+            'gradle'        : '3.2.0',
+            'buildTools'    : '27.0.3',
+            'minSdk'        : 21,
+            'targetSdk'     : 28,
+            'dagger'        : "2.16",
+            'rx'            : "2.2.3",
+            'rxandroid'     : "2.1.0"
+    ]
+
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:3.2.1"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+        classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:$versions.dokka"
+
+    }
+}
+
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

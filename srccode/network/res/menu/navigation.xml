@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_item_airportlist"
+        android:icon="@drawable/list"
+        android:title="@string/string_navigation_listofairports" />
+    <item
+        android:id="@+id/navigation_item_raw"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/string_navigation_raw" />
+
+    <item
+        android:id="@+id/navigation_item_details"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="@string/string_navigation_explanation" />
+    <item
+        android:id="@+id/navigation_item_oldmetars"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="@string/string_navigation_oldmetars" />
+</menu>

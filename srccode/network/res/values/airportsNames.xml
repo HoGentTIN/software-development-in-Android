@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="locationIndicator">
+        <item>EBOS</item>
+        <item>EBBR</item>
+        <item>EBCI</item>
+    </string-array>
+
+    <string-array name="ids">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="descriptions">
+        <item>Ostend–Bruges International Airport</item>
+        <item>Brussels Airport</item>
+        <item>Brussels South Charleroi Airport</item>
+    </string-array>
+</resources>

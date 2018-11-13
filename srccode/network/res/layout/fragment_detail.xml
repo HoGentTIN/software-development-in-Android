@@ -1,0 +1,175 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="metarViewModel"
+            type="be.equality.metar.ui.MetarViewModel" />
+    </data>
+
+    <TableLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="*">
+
+    <TableRow
+        android:layout_width="0dp"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_weight="1"
+            android:text="@string/aiport" />
+
+        <TextView
+            android:id="@+id/textview_fragmentdetail_airport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_weight="1" />
+
+    </TableRow>
+
+        <TableRow
+            android:layout_width="0dp"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:text="@string/raw_code" />
+
+            <TextView
+                android:id="@+id/textview_fragmentdetail_raw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:text="@{metarViewModel.rawMetar}" />
+
+        </TableRow>
+
+
+        <TableRow
+        android:layout_width="0dp"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_weight="1"
+            android:text="@string/day_of_month" />
+
+        <TextView
+            android:id="@+id/textview_fragmentdetail_dayofmonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_weight="1" />
+
+    </TableRow>
+    <TableRow
+        android:layout_width="0dp"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:text="@string/time" />
+
+        <TextView
+            android:id="@+id/textview_fragmentdetail_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_weight="1" />
+
+    </TableRow>
+    <TableRow
+        android:layout_width="0dp"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_weight="1"
+            android:text="@string/wind_direction" />
+
+        <TextView
+            android:id="@+id/textview_fragmentdetail_winddirection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_weight="1" />
+
+    </TableRow>
+    <TableRow
+        android:layout_width="0dp"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_weight="1"
+            android:text="@string/wind_speed" />
+
+        <TextView
+            android:id="@+id/textview_fragmentdetail_windspeed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_weight="1" />
+
+    </TableRow>
+    <TableRow
+        android:layout_width="0dp"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_weight="1"
+            android:text="@string/gusts" />
+
+        <TextView
+            android:id="@+id/textview_fragmentdetail_gusts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_weight="1" />
+
+    </TableRow>
+    <TableRow
+        android:layout_width="0dp"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:text="@string/sight" />
+
+        <TextView
+            android:id="@+id/textview_fragmentdetail_sight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_weight="1" />
+
+    </TableRow>
+
+
+</TableLayout>
+
+</layout>

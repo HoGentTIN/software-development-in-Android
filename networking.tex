@@ -1,39 +1,166 @@
 \chapterimage{images/networking/network}
 
 \chapter{Network}
-This chapter will not completely explain how to perform network transaction, but it will direct you in the right direction. 
+This chapter will explain how to combine alle the previous (Android) concepts: MVVM with Kotlin, Android Architecture Components and incorporating Dagger 2, Retrofit and RxAndroid to be able to create network requests. 
 
-We will provide an overview of some useful libraries and links.
+If you are not completely up to date with the previous chapters, we recommend that you take a closer look to those chapters before continuing. 
 
-dit is een tests
+The example application is able to download METAR information from different aiports, which is a code indicating the type of weather at that aiport \cite{Wikipedia2018}. The application parses this information to make it more readable for non-pilots. 
 
-\subsection{Retrofit}
-Retrofit is a REST Client for Android and Java by Square. It makes it relatively easy to retrieve and upload JSON (or other structured data) via a REST based webservice. In Retrofit you configure which converter is used for the data serialization. Typically for JSON you use GSon, but you can add custom converters to process XML or other protocols. Retrofit uses the OkHttp library for HTTP requests.
+Parts of the application are inspired by the following blog posts: \cite{Gahfy2018, Tiwari2018, Saquib2018}
 
-\subsection{GSON}
-Gson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert a JSON string to an equivalent Java object. 
+The complete build.gradle files are displayed here. 
 
-\subsection{ObjectBox}
-ObjectBox is designed for mobile. It is an object-oriented embedded database and a full alternative for SQLite. ObjectBox is incidentally also well-suited for IoT.
-ObjectBox is optimized for performance and designed to save app developers from dealing with SQL.
+\lstinputlisting[language=Kotlin, 
+caption={Top-level build file for the project},
+label=code:netwgradle]{srccode/network/build.gradle}
 
-\subsection{Bottomnavigation}
-The Bottom Navigation View has been in the material design guidelines for some time. You can use the standard android bottomnavigation or find a 3rd party library.
 
-\section{Exercise}
-\begin{exercise}
-	The task for this week is that you write a short report about the application which you can find \href{Uhttps://github.com/eothein/MetartaffRL}{https://github.com/eothein/Metartaff}. On the exam you could get a question where you need to show the report.
-	
-	What should be in this report? At least the answers to the following questions:
-	\begin{enumerate}
-		\item How is persistence addressed here? It is clearly not done with Content Provider and SQLLite, but in a different way. Which way is this? What are the pros and cons of this method? Is everything done in an asynchronous way? Can you test this for yourself?
-		
-		\item This application consumes a REST Service. How is this addressed in the application? What library is used and does it work asynchronously? Are there alternatives and if so, what are the pros and cons of this?
-		\item When viewing details, Fragments uses a different way than we have seen. What kind of navigation is this, how was this addressed and what are the pros and cons of this?
-		\item How is the parsing of the network data handled in this application. Are there any alternatives? Could this be done easier (or not)?
-	\end{enumerate}
-\end{exercise}
+\lstinputlisting[language=Kotlin, 
+caption={Module build file for the project},
+label=code:netwgradle2]{srccode/network/build.gradle2}
 
-\begin{exercise}
-	As a snack, you need to optimize the application as needed (UI: For example, complete the details of the last loaded METAR, e.g. OldMetars must contain a list of all METARS you've requested for a particular aiport (= history), If loading is unsuccessful, users must be properly updated. Models: Not all parameters are parsed by GSON, \dots) You use the repository you can find on Chamilo under links.
-\end{exercise}
+
+
+\section{Base classes}
+First we need to define the models and ViewModels we are going to use to represent a METAR. Therefore, we have package called \lstinline!model! which contains the model class which is a simple POJO.
+
+\lstinputlisting[language=Kotlin,firstline=32,lastline=42 ,
+caption={METAR POJO},
+label={code:netwmodel}]{srccode/network/java/be/equality/metar/model/Metar.kt}
+
+
+
+There are two remarks here:
+\begin{itemize}
+	\item All the properties are annotated wit \lstinline!@field:Json(name = "field-name")!. This is because we are making use of Moshi, see section \ref{sec:moshi}
+	\item  The class implements \lstinline|Parcelable| with the annotation \lstinline|@Parcelize|. The Android Extensions plugin  includes an automatic \lstinline|Parcelable| implementation generator. By declaring the serialized properties in a primary constructor and add a \lstinline|@Parcelize| annotation, and writeToParcel()/createFromParcel() methods will be created automatically.
+\end{itemize}
+
+\section{Retrofit}
+Retrofit is a REST Client for Android and Java by Square. It makes it relatively easy to retrieve and upload JSON (or other structured data) via a REST based webservice. In Retrofit you configure which converter is used for the data serialization. Typically for JSON you use GSon, but you can add custom converters to process XML or other protocols. You can also use Moshi which is a modern JSON library for Android and Java and makes it easy to parse JSON into Java objects.
+
+Before we go into the Retrofit code, you need to set he following permissions. 
+\lstinputlisting[language=Kotlin,firstline=5,lastline=5,
+caption={Setting the network permissions for using the network},
+label=code:manifest]{srccode/network/AndroidManifest.xml}
+
+
+To work with Retrofit you basically need the following three classes:
+
+\begin{itemize}
+	\item Model class which is used as a JSON model. We already have this, see code listing \ref{code:netwmodel}
+	\item Interfaces that define the possible HTTP operations, see listing 
+	Each Call from the created service can make a synchronous or asynchronous HTTP request to a remote webserver.
+	\item Retrofit.Builder class. An Instance which uses the interface and the Builder API to allow defining the URL end point for the HTTP operations.
+\end{itemize}
+
+\lstinputlisting[language=Kotlin,firstline=1,lastline=19 
+caption={Network service API},
+label=code:netwApi]{srccode/network/java/be/equality/metar/network/MetarApi.kt}
+
+
+To generate a builder, see the following code snippet.
+
+\lstinputlisting[language=Kotlin,firstline=53,lastline=59,
+caption={Using a builder to create the Network Service API},
+label=code:netwApi]{srccode/network/java/be/equality/metar/injection/module/NetworkModule.kt}
+
+
+
+\subsection{Moshi}
+\label{sec:moshi}
+Moshi is a modern JSON library for Android and Java from Square. It can be considered as the successor to GSON, with a simpler and leaner API and an architecture enabling better performance while also being the most Kotlin-friendly library you can use to parse JSON files, as it comes with Kotlin-aware extensions.
+
+We refer to the documentation of this library to use it. In our example we have used the \lstinline!@field:Json(name = "field-name")! annotation to map the properties to the JSON variables. 
+
+
+\section{Dagger2}
+When working with libraries such as Retrofit, you will notice that your code will have a lot of dependencies (e.g. Moshi). Remeber the course Analyse 1?: 
+
+\begin{framed}
+	Whenever a class A uses another class or interface B, then A depends on B. A cannot carry out it's work without B, and A cannot be reused without also reusing B. In such a situation the class A is called the "dependant" and the class or interface B is called the "dependency".
+\end{framed}
+Dependencies are bad because they decrease reuse and make testing more difficult. One way of overcoming the dependency problem is \texttt{Dependency injection}. It is a programming technique that makes a class independent of its dependencies. It achieves that by decoupling the usage of an object from its creation. This helps you to follow SOLID's dependency inversion (see section \ref{sec:dip}) and single responsibility principles (see section )\ref{sec:srp}).
+
+There are few annotations in Dagger 2 API. We will use some of them and explain them along the way. 
+A Module defines one or more injectable classes (as denoted by the Provides annotation). In our case we would like the Retrofit interface to be able to be injected in our other classes. This way we only have one anchor point to our network service.  Therefore  create a module to inject the Retrofit instance, called NetworkModule.
+
+\lstinputlisting[language=Kotlin,firstline=1,lastline=61,
+caption={The Dagger module used to inject the Network Service into the classes of your project. },
+label=code:netwApi]{srccode/network/java/be/equality/metar/injection/module/NetworkModule.kt}
+
+
+The next Dagger 2 concept is a Component. A Component is a mapping between one or more modules and one or more classes that will use them. In this particular case, we have the NetworkModule which needs to inject dependencies in our ViewModel. We have not yet defined our ViewModel, but we will in the next section. 
+
+Components can be instantiated by using the Builders generated by Dagger, but  allows us to customize the generated builder by something knows as a Component.Builder. 
+
+\lstinputlisting[language=Kotlin,firstline=1,lastline=35),
+caption={Using a component to link the modules with the injecting classes.},
+label=code:netwApi]{srccode/network/java/be/equality/metar/injection/component/ViewModelInjectorComponent.kt}
+
+
+\section{MVVM}
+The idea of MVVM has already been introduced in chapter \ref{cap:mvvm}, so we will only focus on the new topics introcuded in this chapter. 
+
+Let us create a PostListViewModel class which will be our ViewModel. For now, we will only get results from API then display it in the view.
+
+First thing we will need so is an instance of the MetarApi class in order to get the result from the API. This instance will be injected by Dagger by using te @injection anotation.
+
+\lstinputlisting[language=Kotlin,firstline=14,lastline=26),
+caption={Injecting into the ViewModel},
+label=code:netwApi]{srccode/network/java/be/equality/metar/ui/MetarViewModel.kt}
+
+
+We will also create a BaseViewModel class which will inject the correct dependencies, depending on the subtype of this subclass. We can later use this way for other injections which could be necessary.
+
+\lstinputlisting[language=Kotlin,firstline=1,lastline=34),
+caption={BaseViewModel class},
+label=code:netwApi]{srccode/network/java/be/equality/metar/base/BaseViewModel.kt}
+
+
+
+And there you have it: the correct dependencies are injected in our ViewModel, without the use of any constructor. 
+
+Don't forget to update the Fragment for the ViewModel and the Layout files. 
+
+
+\section{ReactiveX/RxAndroid}
+Now that the injection of the MetarAPI has been done, let’s retrieve the data from the API. We will need to perform the call in background thread while we want to perform actions with the result on Android main thread. 
+
+\begin{framed}
+	To avoid creating an unresponsive UI, don't perform network operations on the UI thread. By default, Android 3.0 (API level 11) and higher requires you to perform network operations on a thread other than the main UI thread; if you don't, a NetworkOnMainThreadException is thrown.
+\end{framed}
+
+RxAndroid adds the minimum classes to RxJava that make writing reactive components in Android applications easy and hassle-free. More specifically, it provides a Scheduler that schedules on the main thread or any given Looper. 
+
+\subsection{Reaxctive Programming}
+Writing Reactive code has gained a lot of attention the last months. Reactive programming is programming aimed at flows. The main idea is in presenting events and data as flows that can be unified, filtered, transformed, and separated. The basic building blocks of reactive code are Observables and Subscribers. The Observable class is the source of data and the Subscriber class is the consumer.
+
+\subsection{Observable}
+One of the main classes in RxJava is Observable<T>. Its public interface has the following methods: onNext(), onComplete(), onError(). The Observable class two states: the complete successfully state, after which Observable stops working and the error stoppage state. Observable regulates when to supply data. We are supposed to react to those supplies. This class provides that flow of data and events.
+
+It is necessary to remember to unsubscribe from the asynchronous calls. Rx allows you to conveniently unsubscribe from Observable. When subscribing to Observable, the subscribe method returns the Subscription object that contains the unsubscribe() method. In other words, this is some sort of a conversion chain. When calling unsubscribe(), all the operators unsubscribe from one another in sequence from top to bottom. This is how you can avoid memory leaks.
+
+\subsection{subscribeOn}
+With the help of subscribeOn, we specify the background thread where the data flow will be generated and processed.
+subscribeOn accepts Scheduler as a parameter. Scheduler is an abstraction for the thread pool management, just like ExecutorService in Java. In RxJava there are several off-the-shelf implementations of Scheduler and we will use Schedulers.io(). Perfect for the I/O activities, like reading or recording into a database, server requests, reading of or recording to drive. In other words, the operations that require complex computations and many times, waiting for data to be sent or received.
+
+\subsection{oserveOn}
+observeOn is supposed to redirect the chain of operations to another thread. As opposed to subscribeOn, the observeOn position influences the way operations after it in the chain will be processed..
+
+We use tow more operators, to show or hide the loading state. 
+\begin{itemize}
+	\item doOnSubscribe which Modifies the source so that it invokes the given action when it is subscribed from its subscribers.
+	\item  doOnTerminate which Calls the specified action just before this Observable signals onError or onCompleted.
+\end{itemize}
+
+In the end, we get the following code:
+
+\lstinputlisting[language=Kotlin,firstline=34,lastline=88),
+caption={Using RxAndroid to schedule the requests on another thread and applying other actions.},
+label=code:netwApi]{srccode/network/java/be/equality/metar/ui/MetarViewModel.kt}
+
+
+
+
