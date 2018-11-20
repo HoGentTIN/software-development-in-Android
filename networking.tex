@@ -107,9 +107,9 @@ label=code:netwApi]{srccode/network/java/be/equality/metar/injection/component/V
 \section{MVVM}
 The idea of MVVM has already been introduced in chapter \ref{cap:mvvm}, so we will only focus on the new topics introcuded in this chapter. 
 
-Let us create a PostListViewModel class which will be our ViewModel. For now, we will only get results from API then display it in the view.
+Let us create a \lstinline!MetarViewModel! class which will be our ViewModel. For now, we will only get results from API then display it in the view.
 
-First thing we will need so is an instance of the MetarApi class in order to get the result from the API. This instance will be injected by Dagger by using te @injection anotation.
+First thing we will need so is an instance of the MetarApi class in order to get the result from the API. This instance will be injected by Dagger by using the \lstinline!@Inject! anotation.
 
 \lstinputlisting[language=Kotlin,firstline=14,lastline=26),
 caption={Injecting into the ViewModel},
@@ -139,24 +139,39 @@ Now that the injection of the MetarAPI has been done, let’s retrieve the data 
 RxAndroid adds the minimum classes to RxJava that make writing reactive components in Android applications easy and hassle-free. More specifically, it provides a Scheduler that schedules on the main thread or any given Looper. 
 
 \subsection{Reaxctive Programming}
-Writing Reactive code has gained a lot of attention the last months. Reactive programming is programming aimed at flows. The main idea is in presenting events and data as flows that can be unified, filtered, transformed, and separated. The basic building blocks of reactive code are Observables and Subscribers. The Observable class is the source of data and the Subscriber class is the consumer.
+Writing Reactive code has gained a lot of attention the last months. Reactive programming is programming aimed at flows.
+The main idea is in presenting events and data as flows that can be unified, filtered, transformed, and separated.
+The basic building blocks of reactive code are Observables and Subscribers. The Observable class is the source of data and the Subscriber class is the consumer.
 
 \subsection{Observable}
-One of the main classes in RxJava is Observable<T>. Its public interface has the following methods: onNext(), onComplete(), onError(). The Observable class two states: the complete successfully state, after which Observable stops working and the error stoppage state. Observable regulates when to supply data. We are supposed to react to those supplies. This class provides that flow of data and events.
+One of the main classes in RxJava is Observable<T>.
+Its public interface has the following methods: onNext(), onComplete(), onError().
+The Observable class has two states: the complete successfully state, after which Observable stops working and the error stoppage state.
+Observable regulates when to supply data. We are supposed to react to those supplies. This class provides that flow of data and events.
 
-It is necessary to remember to unsubscribe from the asynchronous calls. Rx allows you to conveniently unsubscribe from Observable. When subscribing to Observable, the subscribe method returns the Subscription object that contains the unsubscribe() method. In other words, this is some sort of a conversion chain. When calling unsubscribe(), all the operators unsubscribe from one another in sequence from top to bottom. This is how you can avoid memory leaks.
+It is necessary to remember to unsubscribe from the asynchronous calls.
+Rx allows you to conveniently unsubscribe from Observable.
+When subscribing to an Observable, the subscribe method returns the Subscription object that contains the unsubscribe() method.
+In other words, this is some sort of a conversion chain.
+When calling unsubscribe(), all the operators unsubscribe from one another in sequence from top to bottom.
+This is how you can avoid memory leaks.
 
 \subsection{subscribeOn}
 With the help of subscribeOn, we specify the background thread where the data flow will be generated and processed.
-subscribeOn accepts Scheduler as a parameter. Scheduler is an abstraction for the thread pool management, just like ExecutorService in Java. In RxJava there are several off-the-shelf implementations of Scheduler and we will use Schedulers.io(). Perfect for the I/O activities, like reading or recording into a database, server requests, reading of or recording to drive. In other words, the operations that require complex computations and many times, waiting for data to be sent or received.
+subscribeOn accepts Scheduler as a parameter.
+A Scheduler is an abstraction for the thread pool management, just like ExecutorService in Java.
+In RxJava there are several off-the-shelf implementations of Scheduler and we will use Schedulers.io().
+Perfect for the I/O activities, like reading or recording into a database, server requests, reading of or recording to persistent storage.
+In other words, the operations that require complex computations and waiting for data to be sent or received.
 
-\subsection{oserveOn}
-observeOn is supposed to redirect the chain of operations to another thread. As opposed to subscribeOn, the observeOn position influences the way operations after it in the chain will be processed..
+\subsection{observeOn}
+observeOn is supposed to redirect the chain of operations to another thread.
+As opposed to subscribeOn, the observeOn position influences the way operations after it in the chain will be processed..
 
 We use two more operators, to show or hide the loading state. 
 \begin{itemize}
-	\item doOnSubscribe which Modifies the source so that it invokes the given action when it is subscribed from its subscribers.
-	\item  doOnTerminate which Calls the specified action just before this Observable signals onError or onCompleted.
+	\item doOnSubscribe which modifies the source so that it invokes the given action when it is subscribed from its subscribers.
+	\item  doOnTerminate which calls the specified action just before this Observable signals onError or onCompleted.
 \end{itemize}
 
 In the end, we get the following code:
