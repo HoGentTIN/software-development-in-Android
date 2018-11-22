@@ -61,7 +61,6 @@ freeline_project_description.json
 *.bcf
 *.idx
 *.run.xml
-cursus-nativeapps.pdf
 cursus-nativeapps.toc
 
 # Slides
@@ -75,7 +74,7 @@ cursus-nativeapps.toc
 *.snm
 *.toc
 *.vrb
-*.pdf
+
 
 #Glossary files
 *.acn
