@@ -39,258 +39,233 @@ String stringPreference =
 mySharedPreferences.getString("textEntryValue", "");
 \end{android}
 
-\section{SQLLite}
-Using SQLite you can create fully encapsulated relational databases for your applications. Use them to store and manage complex, structured application data. Android databases are stored in the \texttt{/data/data/<package\_name>/databases} folder on your device (or emulator). All databases are private, accessible only by the application that created them.
+\section{Room}
+Android provides a built-in SQLite database for when the data you want to store is more complex than just key-value pairs.
+Oftentimes this is used to provide caching and/or offline functionality: once a network request has been made the result is also saved in the applications database so it can be accessed when no network is available.
 
-\subsection{Define your Schema}
-One of the main principles of SQL databases is the schema: a formal declaration of how the database is organized. The schema is reflected in the SQL statements that you use to create your database. You may find it helpful to create a companion class, known as a contract class, which explicitly specifies the layout of your schema in a systematic and self-documenting way.
-
-A contract class is a container for constants that define names for URIs, tables, and columns. The contract class allows you to use the same constants across all the other classes in the same package. This lets you change a column name in one place and have it propagate throughout your code.
-
-A good way to organize a contract class is to put definitions that are global to your whole database in the root level of the class. Then create an inner class for each table that enumerates its columns.
-
-Note: By implementing the BaseColumns interface, your inner class can inherit a primary key field called \_ID that some Android classes such as cursor adaptors will expect it to have. It's not required, but this can help your database work harmoniously with the Android framework.
-
-
-\subsection{Introducing the SQLiteOpenHelper}
-SQLiteOpenHelper is an abstract class used to implement the best practice pattern for creating, opening, and upgrading databases. By implementing an SQLite Open Helper, you hide the logic used to decide if a database needs to be created or upgraded before it’s opened, as well as ensure that each operation is completed efficiently. It’s good practice to defer creating and opening databases until they’re needed. The SQLiteOpen Helper caches database instances after they’ve been successfully opened, so you can make requests to open the database immediately prior to performing a query or transaction. For the same reason, there is no need to close the database manually unless you no longer need to use it again.
-
-\begin{framed}
-	Database operations, especially opening or creating databases, can be time consuming. To ensure this doesn’t impact the user experience, make all database transactions asynchronous. Make sure you use the same connection when writing and reading to the database (where locking is implemented).
-\end{framed}
-
-To access a database using the SQLite Open Helper, call getWritableDatabase or getReadableDatabase to open and obtain a writable or read-only instance of the underlying database, respectively.
-
-You need to override the following methods to create and update your database.
+Room, just like ViewModel and LiveData, is one of the recently released Architecture Components.
+It's a wrapper around the built-in SQLite functionalities.
+Working directly with the SQLite API is possible, but it is very low-level and requires a great deal of time and effort to use: \cite{Sqlite}
 \begin{enumerate}
-	\item onCreate() - is called by the framework, if the database is accessed but not yet created.
-	\item onUpgrade() - called, if the database version is increased in your application code. This method allows you to update an existing database schema or to drop the existing database and recreate it via the onCreate() method.
-	\item  onOpen() - This method is called after the database connection has been configured and after the database schema has been created, upgraded or downgraded as necessary.
+	\item There is no compile-time verification of raw SQL queries.
+	As your data graph changes, you need to update the affected SQL queries manually.
+	This process can be time consuming and error prone.
+	\item You need to use lots of boilerplate code to convert between SQL queries and data objects.
 \end{enumerate}
 
-\begin{framed}
-It is good practice to create a separate class per table. This class defines static onCreate() and onUpgrade() methods. These methods are called in the corresponding methods of SQLiteOpenHelper. This way your implementation of SQLiteOpenHelper stays readable, even if you have several tables.
-\end{framed}
+\subsection{In theory}
+There are 3 major components in Room \cite{RoomDevAndroid} (see also figure \ref{fig:roomarchitecture}):
+\begin{description}
+	\item[Database]: Contains the database holder and serves as the main access point for the underlying connection to your app's persisted, relational data.
+	The class that's annotated with @Database should satisfy the following conditions:
+	\begin{enumerate}
+		\item Be an abstract class that extends RoomDatabase.
+		Include the list of entities associated with the database within the annotation.
+		\item Contain an abstract method that has 0 arguments and returns the class that is annotated with @Dao.
+	\end{enumerate}
+ 	At runtime, you can acquire an instance of Database by calling Room.databaseBuilder() or Room.inMemoryDatabaseBuilder().
+	\item [DAO]: Contains the methods used for accessing the database.
+	\item [Entity]: Represents a table within the database.
+\end{description}
 
-\subsubsection{Some considerations}
-You should keep the following Android-specific considerations in mind when designing your database.
-\begin{enumerate}
-	\item Files (such as bitmaps or audio fi les) are not usually stored within database tables. Use a string to store a path to the fi le, preferably a fully qualifi ed URI.
-	\item Although not strictly required, it’s strongly recommended that all tables include an auto-increment key field as a unique index field for each row. If you plan to share your table using a Content Provider, a unique ID field is required.
-\end{enumerate}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{images/persistency/room_architecture}
+	\caption{Room architecture diagram. From \cite{RoomDevAndroid}.}
+	\label{fig:roomarchitecture}
+\end{figure}
 
-\subsection{Query a database}
-Each database query is returned as a \texttt{Cursor}. This lets Android manage resources more efficiently by retrieving and releasing row and column values on demand. To execute a query on a Database object, use the query method with the necessary parameters.
+\subsection{In practice}
+In this section we'll follow a slightly adapter version of Google's Room with a View Codelab \cite{RoomWithAView}.
+We won't be using Kotlin's co-routine feature and will also uses multiple fragments instead of multiple activities. 
 
-\subsubsection{Cursor}
-A query returns a Cursor object. A Cursor represents the result of a query and basically points to one row of the query result. This way Android can buffer the query results efficiently; as it does not have to load all data into memory.
 
-To extract values from a Cursor, first use the \texttt{moveTo<location>} method to position the cursor at the correct row of the result Cursor, and then use the type-safe \texttt{get<type>} methods (passing in a column index) to return the value stored at the current row for the specified column. To find the column index of a particular column within a result Cursor, use its \texttt{getColumnIndexOrThrow} and \texttt{getColumnIndex()} methods. As an overview:
+\subsection{Setting up the gradle files}
+After starting a new project with just an empty Activity, make the following changes to the app's build.gradle file.
 
-To get the number of elements of the resulting query use the \texttt{getCount()} method.
-To move between individual data rows, you can use the \texttt{moveToFirst()} and \texttt{moveToNext()} methods. The \texttt{isAfterLast()} method allows to check if the end of the query result has been reached.
-Cursor provides typed get*() methods, e.g. \texttt{getLong(columnIndex)}, \texttt{getString(columnIndex)} to access the column data for the current position of the result. The "columnIndex" is the number of the column you are accessing.
-Cursor also provides the \texttt{getColumnIndexOrThrow(String)} method which allows to get the column index for a column name of the table.
-When you have finished using your result Cursor, it’s important to close it to avoid memory leaks and reduce your application’s resource load
+Add the Kotlin annotation processor.
+This processor will read the annotations we put with the Database, Entity and DAO classes.
+\begin{android}
+	apply plugin: 'kotlin-kapt'
+\end{android}
 
-\subsection{Insert into a database}
-To create a new row, construct a ContentValues object and use its put methods to add name/value pairs representing each column name and its associated value. Insert the new row by passing the Content Values into the insert method called on the target database — along with the table name.
+And add the necessary libraries:
+\begin{android}
+// Room components
+implementation "android.arch.persistence.room:runtime:1.1.1"
+kapt "android.arch.persistence.room:compiler:1.1.1"
+androidTestImplementation "android.arch.persistence.room:testing:1.1.1"
 
-\subsection{Updating a row}
-When you need to modify a subset of your database values, use the update() method.
+// Lifecycle components
+implementation "android.arch.lifecycle:extensions:1.1.1"
+kapt "android.arch.lifecycle:compiler:1.1.1"
+\end{android}
 
-Updating the table combines the content values syntax of insert() with the where syntax of delete().
+\subsection{Creating the entity}
+Every class you want to save in the database has to become a database \textit{entity}.
+In this simple application we will allow the user to add words to a database.
 
-\subsection{Deleting a row}
-To delete rows from a table, you need to provide selection criteria that identify the rows. The database API provides a mechanism for creating selection criteria that protects against SQL injection. The mechanism divides the selection specification into a selection clause and selection arguments. The clause defines the columns to look at, and also allows you to combine column tests. The arguments are values to test against that are bound into the clause. Because the result isn't handled the same as a regular SQL statement, it is immune to SQL injection.
-
-\subsubsection{SQL Injection}
-Just like web applications, Android applications may use untrusted input to construct SQL queries and do so in a way that's exploitable (see \cite{Makan2013}). The most common case is when applications do not sanitize input for any SQL and do not limit access to content providers.
-
-Why would you want to stop a SQL-injection attack? Well, let's say you're in the classic situation of trying to authorize users by comparing a username supplied by querying a database for it. The code would look similar to the following:
+This means creating a Word class and giving it the required annotations.
+\begin{description}
+	\item[@Entity] is used to indicate to the Room library that objects of this class will be stored in the database.
+	The annotation also requires a tableName parameter that specifies the name of the table in which the objects will be stored.
+	\item[@PrimaryKey] indicates, as you would expect, which attribute is the primary key for this table.
+	\item[@ColumnInfo] can be used if you want the column name to be different from the name of the attribute.
+\end{description}
 
 \begin{android}
-public boolean isValidUser(){ 
-	u_username = EditText( some user value );
-	u_password = EditText( some user value );
-	//some un-important code here...
-	String query = "select * from users_table 
-	where username = '" +  u_username + "' and password = '" + 
-	u_password
-	+"'";
-	SQLiteDatabase db
-	//some un-important code here...
-	Cursor c = db.rawQuery( p_query, null );
-	return c.getCount() != 0;
+@Entity(tableName = "word_table")
+class Word(@PrimaryKey @ColumnInfo(name = "word") val word: String)
+\end{android}
+
+\subsection{Creating the DAO}
+A DAO is a \textbf{D}ata \textbf{A}ccess \textbf{O}bject.
+With this object Room allows us to write the required SQL queries. 
+Just like in Retrofit we define an interface (an abstract class is possible as well) with the methods we'd like to call and annotate each method with the corresponding SQL query.
+
+Room provides some predefined annotations for the most common queries (@Insert, @Update, @Delete).
+For other queries the @Query annotation should be used, with the actual query as parameter for the annotation.
+
+\begin{android}
+/**
+* Use the @Query annotation to specify a custom SQL query.
+* By specifiying LiveData as the return value Room will provide all the necessary code to update the LiveData object
+* when the database is updated.
+*/
+@Query("SELECT * from word_table ORDER BY word ASC")
+fun getAllWords(): LiveData<List<Word>>
+
+
+@Insert
+fun insert(word: Word)
+
+@Query("DELETE FROM word_table")
+fun deleteAll()
+\end{android}
+
+\subsection{Adding a database}
+The DAO itself isn't enough to perform the queries.
+Just like a Retrofit API needs a backend to respond to the requests, we need a database to query. 
+
+The database class should be abstract and extend RoomDatabase.
+The @Database annotation is used to indicate what entities the database will hold, as well as indicate a version number
+\footnote{This version number can be upped each time you make changes to the database scheme. 
+	If you want to migrate the data from one schema version to the next you'll have to write Migration classes and include them when building the database.
+	More info on \url{https://medium.com/androiddevelopers/understanding-migrations-with-room-f01e04b07929}.}
+Every DAO that will be used to perform queries on this database should be mentioned as return values for abstract functions.
+When building the database these interfaces will be implemented for you.
+
+The database class should also be implemented as a singleton to avoid multiple instances of your database being opened at the same time.
+
+\begin{android}
+@Database(entities = [Word::class], version = 1)
+abstract class WordDatabase : RoomDatabase() {
+	abstract fun wordDao(): WordDao
+	
+	companion object {
+		@Volatile
+		private var INSTANCE: WordDatabase? = null
+		
+		fun getDatabase(context: Context): WordDatabase {
+			val tempInstance = INSTANCE
+			if (tempInstance != null) {
+				return tempInstance
+			}
+			synchronized(this) {
+				val instance = Room.databaseBuilder(
+					context.applicationContext,
+					WordDatabase::class.java,
+					"Word_database"
+				).build()
+				INSTANCE = instance
+				return instance
+			}
+		}
+	}
 }
 \end{android}
-What's the problem in the previous code? Well, what happens when the user supplies a password '' or '1'='1'? The query being passed to the database then looks like the following:
+
+\subsection{The repository pattern}
+You've known about repositories since your first year: they're classes that represent a collection of objects and the ones that are responsible for communication with the persistence layer of you application. 
+This latter is what we'll be doing here: the repository class will abstract the access to multiple data sources (network and database).
+A simple diagram is shown in figure \ref{fig:repository}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{images/persistency/repository}
+	\caption{A Repository class abstracts access to multiple data sources.
+		When a network connection is unavailable, the Dao can be used to request cached data instead.
+		Using the repository pattern hides this complexity from other classes.}
+	\label{fig:repository}
+\end{figure}
+
+The repository usually implements the logic for deciding whether to fetch data from a network or use results cached in a local database.
+In this simple example we'll only implement the database portion. 
+
+For every operation a method should be implemented. 
+These methods will call the corresponding DAO.
+Database calls should always be done asynchronously to avoid blocking the main thread.
+To enforce this we add the @WorkerThread annotation to each method.
 
 \begin{android}
-select * from users_table where username = '" +  
-u_username
-+ "' and password = '' 
-or '1'='1'
-"
+class WordRepository(private val wordDao: WordDao) {
+	val words: LiveData<List<Word>> = wordDao.getAllWords()
+	
+	@WorkerThread
+	fun insert(word: Word) {
+		wordDao.insert(word)
+	}
+}
 \end{android}
 
-The preceding bold characters indicate the part that was supplied by the user; this query forms what's known in Boolean algebra as a logical tautology; meaning no matter what table or data the query is targeted at, it will always be set to true, which means that all the rows in the database will meet the selection criteria. This then means that all the rows in \texttt{users\_table} will be returned and as result, even if a nonvalid password ' or '1'=' is supplied, the c.getCount() call will always return a nonzero count, leading to an authentication bypass!
 
-The best way to make sure adversaries will not be able to inject unsolicited SQL syntax into your queries is to avoid using SQLiteDatabase.rawQuery() instead opting for a parameterized statement. Using a compiled statement, such as SQLiteStatement, offers both binding and escaping of arguments to defend against SQL-injection attacks. Also, there is a performance benefit due to the fact the database does not need to parse the statement for each execution. An alternative to SQLiteStatement is to use the query, insert, update, and delete methods on SQLiteDatabase as they offer parameterized statements via their use of string arrays.
-
-When we describe parameterized statement, we are describing an SQL statement with a question mark where values will be inserted or binded. Here's an example of parameterized SQL insert statement:
-
-\section{Working assynchronoysly with SQLLite}
-\subsection{Loaders}
-Loaders \cite{Lockwood2012} are  simple, self-contained objects that 
-\begin{inparaenum}[(i)]
-	\item load data on a separate thread, 
-	\item monitor the underlying data source for updates and
-	\item  re-querying when changes are detected.
-\end{inparaenum}
-
- The Loader API lets you load data from a content provider or other data source for display in an Activity or Fragment.
-\begin{itemize}
-	\item If you fetch the data directly in the activity or fragment, your users will suffer from lack of responsiveness due to performing potentially slow queries from the UI thread.
-	\item If you fetch the data from another thread, perhaps with AsyncTask, then you're responsible for managing both the thread and the UI thread through various activity or fragment lifecycle events, such as onDestroy() and configurations changes. Using Loaders this is not necessary.
-\end{itemize}
-
-\subsection{Loadersmanager}
-The LoaderManager is responsible for managing one or more Loaders associated with an Activity or Fragment. Each Activity and each Fragment has exactly one LoaderManager instance that is in charge of starting, stopping, retaining, restarting, and destroying its Loaders. These events are sometimes initiated directly by the client, by calling initLoader(), restartLoader(), or destroyLoader(). Just as often, however, these events are triggered by major Activity/Fragment lifecycle events. For example, when an Activity is destroyed, the Activity instructs its LoaderManager to destroy and close its Loaders (as well as any resources associated with them, such as a Cursor).
-
-The LoaderManager does not know how data is loaded, nor does it need to. Rather, the LoaderManager instructs its Loaders when to start/stop/reset their load, retaining their state across configuration changes and providing a simple interface for delivering results back to the client. 
-
-The LoaderManager makes your life easy. It initializes, manages, and destroys Loaders for you, reducing both coding complexity and subtle lifecycle-related bugs in your Activitys and Fragments. Further, interacting with the LoaderManager involves implementing three simple callback methods.
-
-\subsection{LoaderManager.LoaderCallbacks<D>}
-The LoaderManager.LoaderCallbacks<D> interface is a simple contract that the LoaderManager uses to report data back to the client. Each Loader gets its own callback object that the LoaderManager will interact with. This callback object fills in the gaps of the abstract LoaderManager implementation, telling it how to instantiate the Loader (onCreateLoader) and providing instructions when its load is complete/reset (onLoadFinished and onLoadReset, respectively). Most often you will implement the callbacks as part of the component itself, by having your Activity or Fragment implement the LoaderManager.LoaderCallbacks<D> interface:
+\subsection{Using the DAO}
+We will use a ViewModel to hold the list of all words that have been entered.
+This ViewModel will have to load the list from the database when it is created, and provide a function that inserts a given word into the database.
+To do this it needs a WordRepository.
 
 \begin{android}
-public class SampleActivity extends Activity implements LoaderManager.LoaderCallbacks<D> {
+class WordViewModel : ViewModel() {
+	@Inject
+	lateinit var wordRepository: WordRepository
 	
-	public Loader<D> onCreateLoader(int id, Bundle args) { ... }
+	init {
+		App.component.inject(this)
+	}
 	
-	public void onLoadFinished(Loader<D> loader, D data) { ... }
+	val allWords: LiveData<List<Word>> = wordRepository.words
 	
-	public void onLoaderReset(Loader<D> loader) { ... }
-	
-	/* ... */
-}	
+	fun insert(word: Word) {
+		doAsync {
+			wordRepository.insert(word)
+		}
+	}
+}
 \end{android}
 
-Once instantiated, the client passes the callbacks object  as the third argument to the LoaderManager’s initLoader method, and will be bound to the Loader as soon as it is created.
+The wordRepository is injected using Dagger. 
+How this is done is slightly different from the way explained in the network chapter:
+to create a SQLite database you require a context. 
+You can't create a context object yourself, so it has to be given to the Module somehow. 
+This is done by creating our own Application class, registering it in the manifest file, and passing itself as a constructor parameter for the Module.
+The created component is saved in a companion object and can thus be used everywhere throughout our app.
 
-Overall, implementing the callbacks is straightforward. Each callback method serves a specific purpose that makes interacting with the LoaderManager easy:
-
-\begin{enumerate}
-	\item onCreateLoader is a factory method that simply returns a new Loader. The LoaderManager will call this method when it first creates the Loader.
+\begin{android}	
+class App : Application() {
+	companion object {
+		lateinit var component: DatabaseComponent
+	}
 	
-	\item onLoadFinished is called automatically when a Loader has finished its load. This method is typically where the client will update the application’s UI with the loaded data. The client may (and should) assume that new data will be returned to this method each time new data is made available. Remember that it is the Loader’s job to monitor the data source and to perform the actual asynchronous loads. The LoaderManager will receive these loads once they have completed, and then pass the result to the callback object’s onLoadFinished method for the client (i.e. the Activity/Fragment) to use.
-	
-	\item onLoadReset is called when the Loader’s data is about to be reset. This method gives you the opportunity to remove any references to old data that may no longer be available.
-\end{enumerate}
-
-\section{ContentProviders}
-ContentProviders  provide an interface for publishing data that will be consumed using a ContentResolver. They allow you to decouple the application components that consume data from their underlying data sources, providing a generic mechanism through which applications can share their data or consume data provided by others.
-
-You will also need to override the onCreate handler to initialize the underlying data source, as well as the query, update, delete, insert, and getType methods to implement the interface used by the Content Resolver to interact with the data.
-
-\begin{framed}
-	Like the database contract class described in the previous section, it’s good practice to include static ContentProvider constants — particularly column names and the Content Provider authority — that will be required for transacting with, and querying, the database.
-\end{framed}
-
-\subsection{Registering ContentProviders}
-Like Activities and Services, Content Providers must be registered in your application manifest before the Content Resolver can discover them. This is done using a provider tag that includes a name attribute describing the Provider’s class name and an authorities tag.
-
-Use the authorities tag to define the base URI of the Provider’s authority. A Content Provider’s authority is used by the Content Resolver as an address and used to find the data source you want to interact with.
-
-\begin{framed}
-Each Content Provider authority must be unique, so it’s good practice to base the URI path on your package name e.g., \texttt{com.<CompanyName>.provider.<ApplicationName>}
-\end{framed}
-
-\begin{xml}
-<provider
-android:authorities="com.hogent.provider.testapplicatie"
-android:name=".contentprovider.TestContentProvider" >
-</provider>
-\end{xml}
-
-Until Android version 4.2 a content provider is by default available to other Android applications. As of Android 4.2 a content provider must be explicitly exported. To set the visibility of your content provider use the android:exported=false|true parameter in the declaration of your content provider in the AndroidManifest.xml file.
-
-You can use a UirMatcher to help you with the Uri matching.
-
-\subsection{Creating the ContentProvider's data source}
-To initialize the data source you plan to access through the Content Provider, override the onCreate method. This is typically handled using an SQLite Open Helper implementation, of the type described in the previous section, allowing you to effectively defer creating and opening the database until it’s required.
-
-To support queries with your Content Provider, you must implement the query and getType methods. Content Resolvers use these methods to access the underlying data, without knowing its structure or implementation. These methods enable applications to share data across application boundaries without having to publish a specific interface for each data source. The most common scenario is to use a ContentProvider to provide access to an SQLite database, but within these methods you can access any source of data (including files, application instance variables or even the network).
-
-Having implemented queries, you must also specify a MIME type to identify the data returned. Override the getType method to return a string that uniquely describes your data type.
-
-To expose delete, insert, and update transactions on your Content Provider, implement the corresponding delete, insert, and update methods.
-
-When performing transactions that modify the dataset, it’s good practice to call the Content Resolver’s \texttt{notifyChange} method. This will notify any Content Observers, registered for a given Cursor using the Cursor.registerContentObserver method, that the underlying table (or a particular row) has been removed, added, or updated.
-
-\subsection{ContentResolver}
-Each application includes a ContentResolver instance, accessible using the getContentResolver method. When Content Providers are used to expose data, Content Resolvers are the corresponding class used to query and perform transactions on those Content Providers. Whereas Content Providers provide an abstraction from the underlying data, Content Resolvers provide an abstraction from the Content Provider being queried or transacted. The Content Resolver includes query and transaction methods corresponding to those defi ned within your Content Providers. The Content Resolver does not need to know the implementation of the Content Providers it is interacting with — each query and transaction method simply accepts a URI that specifi es the Content Provider to interact with.
-
-To retrieve data from a provider, follow these basic steps:
-
-\begin{enumerate}
-	\item Request the read access permission for the provider.
-	\item Define the code that sends a query to the provider.
-\end{enumerate}
-
-
-To retrieve data from a provider, your application needs "read access permission" for the provider. You can't request this permission at run-time; instead, you have to specify that you need this permission in your manifest, using the <uses-permission>; element and the exact permission name defined by the provider. When you specify this element in your manifest, you are in effect "requesting" this permission for your application. When users install your application, they implicitly grant this request.
-
-Using the query method on the ContentResolver object, pass in the following:
-
-\begin{enumerate}
-	\item A URI to the Content Provider you want to query.
-	\item A projection that lists the columns you want to include in the result set.
-	\item A where clause that defi nes the rows to be returned. You can include ? wildcards that will be replaced by the values passed into the selection argument parameter.
-	\item An array of selection argument strings that will replace the ? wildcards in the where clause.
-	\item A string that describes the order of the returned rows.
-\end{enumerate}
-
-\subsection{Querying for Content Asynchronously Using the CursorLoader}
-To use a Cursor Loader, create a new LoaderManager.LoaderCallbacks implementation. Loader Callbacks are implemented using generics, so you should specify the explicit type being loaded, in this case Cursors, when implementing your own.
-
-\begin{android}
-LoaderManager.LoaderCallbacks<Cursor> loaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() 
+	override fun onCreate() {
+		super.onCreate()
+		component = DaggerDatabaseComponent
+						.builder()
+						.databaseModule(DatabaseModule(this))
+						.build()
+	}
+}
 \end{android}
 
-You should implement the following methods
-
-\begin{enumerate}
-	\item onCreateLoader(int id, Bundle args) : instantiate and return a new Loader for the given ID.
-	\item onLoadFinished(Loader<D> loader, D data) : Called when a previously created loader has finished its load.
-	\item onLoadFinished(Loader<D> loader, D data): Called when a previously created loader has finished its load.
-\end{enumerate}
-
-The LoaderManager manages one or more Loader instances within an Activity or Fragment. There is only one LoaderManager per activity or fragment. You typically initialize a Loader within the activity's onCreate() method, or within the fragment's onActivityCreated() method. You do this as follows:
-
-\begin{android}
-// Prepare the loader.  Either re-connect with an existing one,
-// or start a new one.
-getLoaderManager().initLoader(0, null, this);      
-\end{android}
-The arguments are:
-\begin{enumerate}
-	\item A unique ID that identifies the loader. In this example, the ID is 0.
-	\item Optional arguments to supply to the loader at construction (null in this example).
-	\item A LoaderManager.LoaderCallbacks implementation, which the LoaderManager calls to report loader events. In this example, the local class implements the LoaderManager.LoaderCallbacks interface, so it passes a reference to itself, this.
-\end{enumerate}
-
-If a loader corresponding to the identifier used doesn’t already exist, it is created within the associated Loader Callback’s onCreateLoader handler as described in the previous section. In most circumstances this is all that is required. The Loader Manager will handle the lifecycle of any Loaders you initialize and the underlying queries and cursors. Similarly, it will manage changes to the query results.
-
-\newpage
-\section{Exercises}
-
-\begin{exercise}
-	In this exercise you will extend the dotpict application with persistency features, namely you should be able to create, read and update dotpict pictures from your library. Make sure you use the best practices as seen in this lesseon and you are required to use the SQLLite and Contentprovider approach. Extra functionality is encouraged of course.
-\end{exercise}
-
-\begin{exercise}
-	For this exercise you are required to extend the Who is it application. Provide basic CRUD functionality for the people in the application i.e. you should be able to create, read and update information of one of the characters of your application. The way you implement this functionality is up to you: you can use the basic SQLLite functionality, or use an easier approach (GreenDAO, Room (from Google), Realm \dots) Just make sure you apply the best practices when working with databases. 
-\end{exercise}
+This ViewModel is now ready to be used.
+In a MainFragment we create the ViewModel and ask it for the list of words so we can fill the RecyclerView.
+In a NewWordFragment we allow the user to enter a word and ask the ViewModel to save it (to the database).
