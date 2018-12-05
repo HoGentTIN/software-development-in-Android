@@ -331,6 +331,7 @@ data class Episode(
 	@PrimaryKey
 	val id: UUID = UUID.randomUUID())
 \end{android}
+
 Here we again define the tableName and the indices.
 The foreignKey is an extra attribute for the Entity annotation.
 In it we describe PK-FK relationship between Show and Episodes.
@@ -339,3 +340,96 @@ The childColumn is the FK: here it is the showID from Episode.
 
 With the onDelete and onUpdate you can specify what happens when a Show is deleted or updated.
 Options are CASCADE (also delete or update), RESTRICT (don't allow, so throw an error), NO\_ACTION (self-explanatory) and SET\_NULL(same).
+
+We'll have two separate DAO's: one for Shows and one for Episodes.
+Putting all queries together in a single DAO is possible but with a rising number of queries the interface would soon become an unstructured mess.
+The ShowDao will be used most. The code can be found below:
+\begin{android}
+@Query("SELECT * from show_table")
+fun getAllShows(): LiveData<List<Show>>
+
+@Insert(onConflict = OnConflictStrategy.REPLACE)
+fun insert(show: Show)
+
+@Query("SELECT * FROM show_table WHERE id=:showId")
+fun getShow(showId: UUID): LiveData<Show>
+
+@Query("SELECT * FROM episode_table WHERE showID=:showId")
+fun getEpisodesFromShow(showId: UUID): LiveData<List<Episode>>
+
+@Query("DELETE FROM show_table WHERE id=:showId")
+fun deleteShow(showId: UUID)
+
+@Query("DELETE FROM show_table")
+fun deleteAll()	
+\end{android}
+
+In getEpisodesFromShow we query for the Episodes belonging to a specific Show.
+When using just Foreign Keys there's no way to automatically receive a Show object together with all its Episodes.
+This might be good or bad, depending on what you need or want.
+Using relations, as described in the next section, does allow this.
+
+\subsubsection{Relations}
+The previous subsection illustrated using Foreign Keys.
+Their main advantage is that you can define what happens when the parent Entity in the relation is deleted or updated.
+The downside is that Shows and Episodes exist separately.
+
+Room allows querying both parts of a relationship automatically by using the @Relation annotation.
+This has to be used in a POJO\footnote{Plain Old Java Object}.
+
+See the following code:
+\begin{android}
+class ShowWithEpisodes(
+	@Embedded
+	var show: Show? = null,
+	@Relation(parentColumn = "id", entityColumn = "showId", entity = Episode::class)
+	var episodes: List<Episode> = mutableListOf())
+\end{android}
+
+The @Embedded annotation will allow SQlite to reference the fields in Show directly.
+This means that when Room can fill in the results of a query with fields from Show directly into a Show object.
+The @Relation defines the relation that will be fetched.
+Using the id field from Show (which can be referenced because we used the @Embedded annotation) and the showId from the Episodes Room can find out which Episodes belong to the Show and use them to fill in the episodes list.
+
+The DAO changes slightly: we no longer receive Shows and Episodes, but objects of the ShowWithEpisodes class:
+\begin{android}
+@Transaction
+@Query("SELECT * FROM show_table")
+fun getAllShowsWithEpisodes() : LiveData<List<ShowWithEpisodes>>
+
+@Transaction
+@Query("SELECT * FROM show_table where id= :showId")
+fun getSingleShowWithEpisodes(showId: UUID) : LiveData<ShowWithEpisodes>
+\end{android}
+We use the @Transaction annotation to make sure both queries (the one for the Show and the one for the Show's Episodes) are run together.
+
+Now, we don't want to work with objects of ShowWithEpisode, but with Shows that have their episodes list filled with the corresponding episodes.
+It would be great if there was a way to map objects of ShowWithEpisode directly to Shows. 
+Luckily, this is possible, and the ShowRepository is a great place to do this:
+\begin{android}
+fun getAllShows(): LiveData<List<Show>> {
+	val showsWithEpisodes = showDao.getAllShowsWithEpisodes()
+	return Transformations.map(showsWithEpisodes) {combineListOfShows(it)}
+}
+
+fun getShow(showId : UUID): LiveData<Show> {
+	val showWithEpisodes = showDao.getSingleShowWithEpisodes(showId)
+	return Transformations.map(showWithEpisodes) {combineSingleShow(it)}
+}
+
+private fun combineListOfShows(showsWithEpisodes: List<ShowWithEpisodes>) : List<Show> {
+	return showsWithEpisodes.map{combineSingleShow(it)}
+}
+
+private fun combineSingleShow(show: ShowWithEpisodes):Show {
+	val combinedShow: Show = show.show!!
+	combinedShow.episodes = show.episodes.toMutableList()
+	return combinedShow
+}
+\end{android}
+The getAllShows and getShow method don't just return the result of the functions in the Dao.
+Instead, we use the map function from Androids LiveData library to map LiveData objects onto new ones.
+This is done in the combineListOfShows and combineSingleShow functions.
+The combining step is simply taking the list of episodes from a ShowWithEpisodes object and sticking them into the show.
+
+Now the ViewModel can use the Repositoy to provide fully set-up Show objects to whoever needs them.
