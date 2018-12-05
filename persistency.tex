@@ -269,3 +269,73 @@ class App : Application() {
 This ViewModel is now ready to be used.
 In a MainFragment we create the ViewModel and ask it for the list of words so we can fill the RecyclerView.
 In a NewWordFragment we allow the user to enter a word and ask the ViewModel to save it (to the database).
+
+\subsection{Persisting relations}
+Room does not allow Entities inside other Entities\cite{RoomDevTalk}.
+This might seem like a burden, but there's a good reason. 
+When querying for an Entity that has a relationship with an other Entity, you do not always want the related object as well.
+Some ORM-tools solve this by implementing lazy loading: the related Entity is only queried when specifically asked for.
+This can cause problems when, for example, implementing a RecyclerView with many instances of the first Entity.
+If each ViewHolder would also ask for the related Entity, suddenly you're making lots of queries at once, and possibly slowing down your app.
+For this reason, the Room developers disallowed this kind of behavior.
+
+That of course doesn't mean that you can't use relations at all in Room.
+You can just only use them in ways that avoid nasty scenario's like the one described above. 
+
+There are two options (that can be combined as well):
+\begin{enumerate}
+	\item Don't keep a reference (relation) to other Entities.
+		Instead, link them purely by using ID's and manually query for the relation when you need it.
+		The @ForeignKey annotation provided by Room can help you keep the relations up-to-date by specifying what happens when one side of the relationship is deleted or updated.
+	\item Explicitly ask for the relation when querying an Entity. 
+		This is done using the @Relation annotation.		
+\end{enumerate}
+
+Both options are implemented in a small sample app found on \url{https://github.com/hdeweirdt/TVShows}.
+It allows the user to add Shows to a list and click on one of the Shows and add Episodes for it.
+The RecyclerViews displaying the Shows and Episodes are automatically updated when a new item is added.
+
+The \textit{foreign\_keys} branch implements the first option.
+The \textit{relations} branch continues on the first but uses the @Relation annotation to request both a Show and its Episodes at the same time.
+
+\subsubsection{Foreign Keys}
+When using only the Foreign Keys annotation there's no need for a Show to remember a list of its Episodes.
+When we need the Episodes, we can query for them by using the Show's ID.
+
+Let's first look at the code for the Show:
+\begin{android}
+@Entity(tableName = "show_table", indices = [(Index(value = ["id"], unique = true))])
+@Parcelize
+data class Show(
+	val title: String,
+	@PrimaryKey
+	val id: UUID = UUID.randomUUID()) : Parcelable
+\end{android}
+We still use the Entity annotation, but now also add an ``indices'' parameter. 
+This instructs SQLite to create an index on the specified column.
+This is optional but speeds up SELECT WHERE queries (and slows down writes and updates).
+
+The code for an Episode illustrates the ForeignKey annotation:
+\begin{android}	
+@Entity(tableName = "episode_table",
+		indices = [(Index(value = ["id"], unique = true)), (Index(value = ["showID"], unique = false))],
+		foreignKeys = [ForeignKey(
+			entity = Show::class,
+			parentColumns = ["id"],
+			childColumns = ["showID"],
+			onDelete = ForeignKey.CASCADE,
+			onUpdate = ForeignKey.CASCADE)])
+data class Episode(
+	val title: String,
+	val showID: UUID,
+	@PrimaryKey
+	val id: UUID = UUID.randomUUID())
+\end{android}
+Here we again define the tableName and the indices.
+The foreignKey is an extra attribute for the Entity annotation.
+In it we describe PK-FK relationship between Show and Episodes.
+In parentColumn we refer to the id attribute in Show, as it is the PK. 
+The childColumn is the FK: here it is the showID from Episode. 
+
+With the onDelete and onUpdate you can specify what happens when a Show is deleted or updated.
+Options are CASCADE (also delete or update), RESTRICT (don't allow, so throw an error), NO\_ACTION (self-explanatory) and SET\_NULL(same).
